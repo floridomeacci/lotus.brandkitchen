@@ -63,15 +63,19 @@ body {
   align-items: center;
   padding-bottom: 0;
   color: #101114;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .lotus-mark {
-  width: 78px;
-  height: 78px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #fff200;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .lotus-logo {
