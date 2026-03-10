@@ -17,7 +17,7 @@
       .dash-head-right{display:flex;align-items:center;gap:10px}
       .date-range{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;font-size:12px;color:#cdd3e0;background:#151922;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
       .date-range i{color:#ede500}
-      .live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;animation:pulse 2s infinite}
+      .live-dot{width:7px;height:7px;border-radius:50%;background:#ede500;display:inline-block;animation:pulse 2s infinite}
       @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
       .dash-shell{flex:1;overflow-y:auto;padding:0 2px 20px 0}
@@ -28,7 +28,7 @@
       .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8f98aa;margin:0 0 6px}
       .kpi-value{font-size:26px;font-weight:700;color:#f0f2f8;margin:0;line-height:1.1}
       .kpi-delta{font-size:11px;margin-top:4px;display:flex;align-items:center;gap:4px}
-      .kpi-delta.up{color:#22c55e}
+      .kpi-delta.up{color:#ede500}
       .kpi-delta.down{color:#ef4444}
       .kpi-spark{height:32px;margin-top:8px}
       .kpi-spark svg{width:100%;height:100%}
@@ -53,10 +53,10 @@
       .dash-table tr:last-child td{border-bottom:none}
       .channel-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
       .pill{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:600}
-      .pill.green{background:rgba(34,197,94,.15);color:#22c55e}
-      .pill.amber{background:rgba(245,158,11,.15);color:#f59e0b}
+      .pill.green{background:rgba(237,229,0,.15);color:#ede500}
+      .pill.amber{background:rgba(255,255,255,.08);color:#cdd3e0}
       .pill.red{background:rgba(239,68,68,.15);color:#ef4444}
-      .pill.blue{background:rgba(59,130,246,.15);color:#3b82f6}
+      .pill.blue{background:rgba(255,255,255,.06);color:#8f98aa}
 
       /* ── Bar chart rows ── */
       .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;color:#cdd3e0}
@@ -188,11 +188,11 @@
                 <table class="dash-table" style="margin-top:12px">
                   <thead><tr><th>Channel</th><th>Sessions</th><th>Bounce</th><th>Conv.</th></tr></thead>
                   <tbody>
-                    <tr><td><span class="channel-dot" style="background:#3b82f6"></span>Organic Search</td><td>482K</td><td>38%</td><td><span class="pill green">4.2%</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#8b5cf6"></span>Direct</td><td>312K</td><td>42%</td><td><span class="pill green">3.8%</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#f59e0b"></span>Paid Search</td><td>287K</td><td>44%</td><td><span class="pill amber">2.9%</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#22c55e"></span>Social</td><td>198K</td><td>51%</td><td><span class="pill amber">2.1%</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#ef4444"></span>Display</td><td>141K</td><td>58%</td><td><span class="pill red">1.4%</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#ede500"></span>Organic Search</td><td>482K</td><td>38%</td><td><span class="pill green">4.2%</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#d4cc00"></span>Direct</td><td>312K</td><td>42%</td><td><span class="pill green">3.8%</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#b3ac00"></span>Paid Search</td><td>287K</td><td>44%</td><td><span class="pill amber">2.9%</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#928c00"></span>Social</td><td>198K</td><td>51%</td><td><span class="pill amber">2.1%</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#6b6600"></span>Display</td><td>141K</td><td>58%</td><td><span class="pill red">1.4%</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -205,12 +205,12 @@
                 <span class="source-tag">Salesforce</span>
               </div>
               <div class="widget-body">
-                <div class="bar-row"><span class="bar-label">Awareness</span><div class="bar-track"><div class="bar-fill" style="width:92%;background:#3b82f6"></div></div><span class="bar-val">12,480</span></div>
-                <div class="bar-row"><span class="bar-label">Interest</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#6366f1"></div></div><span class="bar-val">6,214</span></div>
-                <div class="bar-row"><span class="bar-label">Consideration</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:#8b5cf6"></div></div><span class="bar-val">2,847</span></div>
-                <div class="bar-row"><span class="bar-label">Test Drive</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#a855f7"></div></div><span class="bar-val">614</span></div>
-                <div class="bar-row"><span class="bar-label">Negotiation</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:#c084fc"></div></div><span class="bar-val">298</span></div>
-                <div class="bar-row"><span class="bar-label">Closed Won</span><div class="bar-track"><div class="bar-fill" style="width:6%;background:#22c55e"></div></div><span class="bar-val">127</span></div>
+                <div class="bar-row"><span class="bar-label">Awareness</span><div class="bar-track"><div class="bar-fill" style="width:92%;background:#ede500"></div></div><span class="bar-val">12,480</span></div>
+                <div class="bar-row"><span class="bar-label">Interest</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#d4cc00"></div></div><span class="bar-val">6,214</span></div>
+                <div class="bar-row"><span class="bar-label">Consideration</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:#b3ac00"></div></div><span class="bar-val">2,847</span></div>
+                <div class="bar-row"><span class="bar-label">Test Drive</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#928c00"></div></div><span class="bar-val">614</span></div>
+                <div class="bar-row"><span class="bar-label">Negotiation</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:#6b6600"></div></div><span class="bar-val">298</span></div>
+                <div class="bar-row"><span class="bar-label">Closed Won</span><div class="bar-track"><div class="bar-fill" style="width:6%;background:#fff200"></div></div><span class="bar-val">127</span></div>
 
                 <table class="dash-table" style="margin-top:14px">
                   <thead><tr><th>Model</th><th>Leads</th><th>Pipeline</th><th>Status</th></tr></thead>
@@ -238,11 +238,11 @@
                 <table class="dash-table">
                   <thead><tr><th>Platform</th><th>Spend</th><th>Impressions</th><th>Clicks</th><th>CPA</th><th>ROAS</th></tr></thead>
                   <tbody>
-                    <tr><td><span class="channel-dot" style="background:#3b82f6"></span>Google Ads</td><td>€48.2K</td><td>8.4M</td><td>287K</td><td>€168</td><td><span class="pill green">4.1x</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#8b5cf6"></span>Meta Ads</td><td>€36.8K</td><td>12.1M</td><td>198K</td><td>€186</td><td><span class="pill green">3.6x</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#f59e0b"></span>HubSpot Email</td><td>€4.2K</td><td>248K</td><td>42K</td><td>€38</td><td><span class="pill green">8.2x</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#22c55e"></span>LinkedIn</td><td>€12.6K</td><td>1.8M</td><td>34K</td><td>€312</td><td><span class="pill amber">2.1x</span></td></tr>
-                    <tr><td><span class="channel-dot" style="background:#ec4899"></span>TikTok</td><td>€8.4K</td><td>6.2M</td><td>89K</td><td>€94</td><td><span class="pill amber">2.8x</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#ede500"></span>Google Ads</td><td>€48.2K</td><td>8.4M</td><td>287K</td><td>€168</td><td><span class="pill green">4.1x</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#d4cc00"></span>Meta Ads</td><td>€36.8K</td><td>12.1M</td><td>198K</td><td>€186</td><td><span class="pill green">3.6x</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#b3ac00"></span>HubSpot Email</td><td>€4.2K</td><td>248K</td><td>42K</td><td>€38</td><td><span class="pill green">8.2x</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#928c00"></span>LinkedIn</td><td>€12.6K</td><td>1.8M</td><td>34K</td><td>€312</td><td><span class="pill amber">2.1x</span></td></tr>
+                    <tr><td><span class="channel-dot" style="background:#6b6600"></span>TikTok</td><td>€8.4K</td><td>6.2M</td><td>89K</td><td>€94</td><td><span class="pill amber">2.8x</span></td></tr>
                   </tbody>
                 </table>
                 <div class="chart-area" style="height:140px;margin-top:14px"><canvas id="chartMarketing"></canvas></div>
@@ -258,10 +258,10 @@
               <div class="widget-body">
                 <div class="chart-area" style="height:200px"><canvas id="chartBurn"></canvas></div>
                 <div class="burn-legend">
-                  <span><span class="legend-dot" style="background:#3b82f6"></span>Media</span>
-                  <span><span class="legend-dot" style="background:#8b5cf6"></span>Creative</span>
-                  <span><span class="legend-dot" style="background:#22c55e"></span>Tech</span>
-                  <span><span class="legend-dot" style="background:#f59e0b"></span>Operations</span>
+                  <span><span class="legend-dot" style="background:#ede500"></span>Media</span>
+                  <span><span class="legend-dot" style="background:#d4cc00"></span>Creative</span>
+                  <span><span class="legend-dot" style="background:#b3ac00"></span>Tech</span>
+                  <span><span class="legend-dot" style="background:#928c00"></span>Operations</span>
                   <span><span class="legend-dot" style="background:#ef4444"></span>Budget line</span>
                 </div>
                 <table class="dash-table" style="margin-top:12px">
@@ -288,13 +288,13 @@
               </div>
               <div class="widget-body">
                 <div class="dealer-row header"><span>Dealer</span><span>Booked</span><span>Completed</span><span>Conv. %</span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#22c55e"></span>Lotus München</span><span>124</span><span>98</span><span><span class="pill green">79%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#3b82f6"></span>Lotus Berlin</span><span>108</span><span>82</span><span><span class="pill green">76%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#8b5cf6"></span>Lotus Düsseldorf</span><span>96</span><span>71</span><span><span class="pill green">74%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#f59e0b"></span>Lotus Hamburg</span><span>82</span><span>54</span><span><span class="pill amber">66%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#ec4899"></span>Lotus Milano</span><span>74</span><span>52</span><span><span class="pill amber">70%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#ef4444"></span>Lotus Roma</span><span>68</span><span>41</span><span><span class="pill amber">60%</span></span></div>
-                <div class="dealer-row"><span><span class="channel-dot" style="background:#14b8a6"></span>Lotus Frankfurt</span><span>62</span><span>48</span><span><span class="pill green">77%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#ede500"></span>Lotus München</span><span>124</span><span>98</span><span><span class="pill green">79%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#e0d800"></span>Lotus Berlin</span><span>108</span><span>82</span><span><span class="pill green">76%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#d4cc00"></span>Lotus Düsseldorf</span><span>96</span><span>71</span><span><span class="pill green">74%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#c4be00"></span>Lotus Hamburg</span><span>82</span><span>54</span><span><span class="pill amber">66%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#b3ac00"></span>Lotus Milano</span><span>74</span><span>52</span><span><span class="pill amber">70%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#928c00"></span>Lotus Roma</span><span>68</span><span>41</span><span><span class="pill amber">60%</span></span></div>
+                <div class="dealer-row"><span><span class="channel-dot" style="background:#6b6600"></span>Lotus Frankfurt</span><span>62</span><span>48</span><span><span class="pill green">77%</span></span></div>
                 <div class="chart-area" style="height:120px;margin-top:12px"><canvas id="chartDealers"></canvas></div>
               </div>
             </div>
@@ -306,11 +306,11 @@
                 <span class="source-tag">Internal BI</span>
               </div>
               <div class="widget-body">
-                <div class="bar-row"><span class="bar-label">Configurator</span><div class="bar-track"><div class="bar-fill" style="width:84%;background:#3b82f6"></div></div><span class="bar-val">34.2K</span></div>
-                <div class="bar-row"><span class="bar-label">Configurator →&nbsp;Lead</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:#22c55e"></div></div><span class="bar-val">9.6K</span></div>
-                <div class="bar-row"><span class="bar-label">Brochure DL</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#8b5cf6"></div></div><span class="bar-val">18.4K</span></div>
-                <div class="bar-row"><span class="bar-label">Video Views</span><div class="bar-track"><div class="bar-fill" style="width:96%;background:#f59e0b"></div></div><span class="bar-val">1.2M</span></div>
-                <div class="bar-row"><span class="bar-label">Newsletter</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:#ec4899"></div></div><span class="bar-val">22.1K</span></div>
+                <div class="bar-row"><span class="bar-label">Configurator</span><div class="bar-track"><div class="bar-fill" style="width:84%;background:#ede500"></div></div><span class="bar-val">34.2K</span></div>
+                <div class="bar-row"><span class="bar-label">Configurator →&nbsp;Lead</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:#d4cc00"></div></div><span class="bar-val">9.6K</span></div>
+                <div class="bar-row"><span class="bar-label">Brochure DL</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#b3ac00"></div></div><span class="bar-val">18.4K</span></div>
+                <div class="bar-row"><span class="bar-label">Video Views</span><div class="bar-track"><div class="bar-fill" style="width:96%;background:#928c00"></div></div><span class="bar-val">1.2M</span></div>
+                <div class="bar-row"><span class="bar-label">Newsletter</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:#6b6600"></div></div><span class="bar-val">22.1K</span></div>
 
                 <table class="dash-table" style="margin-top:14px">
                   <thead><tr><th>Model Config.</th><th>Starts</th><th>Completes</th><th>Avg. Spec</th></tr></thead>
@@ -366,9 +366,9 @@
     }
 
     drawSparkline('sparkBurn', [310,298,305,292,284,288,279,284,280,284], 'rgb(239,68,68)');
-    drawSparkline('sparkSessions', [980,1020,1080,1120,1180,1240,1300,1350,1390,1420], 'rgb(59,130,246)');
-    drawSparkline('sparkLeads', [2100,2180,2240,2380,2420,2510,2600,2680,2780,2847], 'rgb(34,197,94)');
-    drawSparkline('sparkDrives', [380,410,430,460,490,510,540,570,590,614], 'rgb(168,85,247)');
+    drawSparkline('sparkSessions', [980,1020,1080,1120,1180,1240,1300,1350,1390,1420], 'rgb(237,229,0)');
+    drawSparkline('sparkLeads', [2100,2180,2240,2380,2420,2510,2600,2680,2780,2847], 'rgb(212,204,0)');
+    drawSparkline('sparkDrives', [380,410,430,460,490,510,540,570,590,614], 'rgb(179,172,0)');
     drawSparkline('sparkPipeline', [6800,7000,7200,7500,7700,7900,8100,8300,8400,8600], 'rgb(237,229,0)');
 
     /* ── GA4 area chart ── */
@@ -398,8 +398,8 @@
         ctx.fillStyle = fill; ctx.fill();
       }
 
-      drawArea(sessions, '#3b82f6', 'rgba(59,130,246,.12)');
-      drawArea(users, '#8b5cf6', 'rgba(139,92,246,.10)');
+      drawArea(sessions, '#ede500', 'rgba(237,229,0,.14)');
+      drawArea(users, '#928c00', 'rgba(146,140,0,.10)');
 
       // X labels
       ctx.fillStyle = '#555d6e'; ctx.font = '9px Inter';
@@ -433,9 +433,9 @@
         var hM = (meta[i] / max) * (H - 28);
         var hO = (other[i] / max) * (H - 28);
 
-        ctx.fillStyle = '#3b82f6'; ctx.fillRect(x, y0 - hG, barW, hG);
-        ctx.fillStyle = '#8b5cf6'; ctx.fillRect(x, y0 - hG - hM, barW, hM);
-        ctx.fillStyle = '#f59e0b'; ctx.fillRect(x, y0 - hG - hM - hO, barW, hO);
+        ctx.fillStyle = '#ede500'; ctx.fillRect(x, y0 - hG, barW, hG);
+        ctx.fillStyle = '#b3ac00'; ctx.fillRect(x, y0 - hG - hM, barW, hM);
+        ctx.fillStyle = '#6b6600'; ctx.fillRect(x, y0 - hG - hM - hO, barW, hO);
 
         ctx.fillStyle = '#555d6e'; ctx.font = '9px Inter'; ctx.textAlign = 'center';
         ctx.fillText(m, x + barW / 2, H - 4);
@@ -466,10 +466,10 @@
 
       // Fill areas bottom-up
       var layers = [
-        { data: media, color: 'rgba(59,130,246,.35)' },
-        { data: creative, color: 'rgba(139,92,246,.35)' },
-        { data: tech, color: 'rgba(34,197,94,.35)' },
-        { data: ops, color: 'rgba(245,158,11,.35)' }
+        { data: media, color: 'rgba(237,229,0,.35)' },
+        { data: creative, color: 'rgba(212,204,0,.30)' },
+        { data: tech, color: 'rgba(179,172,0,.25)' },
+        { data: ops, color: 'rgba(146,140,0,.20)' }
       ];
 
       var cumulative = months.map(function() { return 0; });
@@ -527,8 +527,8 @@
         var hB = (booked[i] / max) * (H - 24);
         var hC = (completed[i] / max) * (H - 24);
 
-        ctx.fillStyle = 'rgba(59,130,246,.5)'; ctx.fillRect(x, H - 18 - hB, barW, hB);
-        ctx.fillStyle = 'rgba(34,197,94,.6)'; ctx.fillRect(x + barW + 4, H - 18 - hC, barW, hC);
+        ctx.fillStyle = 'rgba(237,229,0,.5)'; ctx.fillRect(x, H - 18 - hB, barW, hB);
+        ctx.fillStyle = 'rgba(179,172,0,.6)'; ctx.fillRect(x + barW + 4, H - 18 - hC, barW, hC);
 
         ctx.fillStyle = '#555d6e'; ctx.font = '9px Inter'; ctx.textAlign = 'center';
         ctx.fillText(d, x + barW + 2, H - 4);
