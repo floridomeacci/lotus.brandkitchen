@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -15,6 +15,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./llm.js"></script>
     <style>
       .vg-content {
         height: 100vh;
@@ -33,7 +34,7 @@
 
       .vg-head p {
         margin: 0;
-        color: #ede500;
+        color: var(--yellow);
         font-weight: 600;
         font-size: 13px;
       }
@@ -48,7 +49,7 @@
       .vg-shell {
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 14px;
-        background: #1a1e28;
+        background: var(--card);
         display: grid;
         grid-template-columns: 340px 1fr;
         gap: 16px;
@@ -63,7 +64,7 @@
         font-size: 18px;
         font-weight: 700;
         letter-spacing: 0.05em;
-        color: #e8ecf5;
+        color: var(--text);
       }
 
       .prompt-col {
@@ -75,7 +76,7 @@
       .prompt-card,
       .output-card {
         border: 1px solid rgba(255, 255, 255, 0.1);
-        background: #121620;
+        background: var(--bg);
         border-radius: 12px;
       }
 
@@ -89,19 +90,31 @@
         display: grid;
         gap: 5px;
         font-size: 11px;
-        color: #8f98aa;
+        color: var(--card-text);
       }
 
       .prompt-body input,
       .prompt-body select,
       .prompt-body textarea {
-        background: #0f131b;
+        background: rgba(0,0,0,.2);
         border: 1px solid rgba(255, 255, 255, 0.11);
         border-radius: 8px;
-        color: #e9edf5;
+        color: var(--text);
         font-size: 12px;
         padding: 8px 9px;
         font-family: inherit;
+        transition: border-color .2s;
+      }
+      .prompt-body input:hover,
+      .prompt-body select:hover,
+      .prompt-body textarea:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .prompt-body input:focus,
+      .prompt-body select:focus,
+      .prompt-body textarea:focus {
+        border-color: rgba(255, 242, 0, 0.4);
+        outline: none;
       }
 
       .prompt-body textarea {
@@ -111,12 +124,17 @@
 
       .generate-btn {
         border: 1px solid rgba(255, 255, 255, 0.18);
-        background: #161b25;
-        color: #ebeff8;
+        background: var(--panel);
+        color: var(--text);
         border-radius: 999px;
         font-size: 12px;
         padding: 8px 12px;
         cursor: pointer;
+        transition: border-color .2s, background .2s;
+      }
+      .generate-btn:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: var(--card);
       }
 
       .output-col {
@@ -133,7 +151,7 @@
       .variant-chip {
         border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 999px;
-        color: #c8cfdd;
+        color: var(--card-text);
         font-size: 10px;
         padding: 5px 9px;
       }
@@ -151,7 +169,7 @@
       .out-img {
         width: 100%;
         aspect-ratio: 16 / 9;
-        background: #0d1016;
+        background: var(--bg);
       }
 
       .out-img img {
@@ -168,13 +186,13 @@
       .out-meta h3 {
         margin: 0;
         font-size: 13px;
-        color: #eff3f8;
+        color: var(--text);
       }
 
       .out-meta p {
         margin: 4px 0 0;
         font-size: 11px;
-        color: #96a0b3;
+        color: var(--card-text);
       }
 
       .active-app {
@@ -183,7 +201,7 @@
       }
 
       .active-app .ico {
-        color: #ede500;
+        color: var(--yellow);
       }
 
       @media (max-width: 1240px) {
@@ -298,7 +316,7 @@
                 Prompt
                 <textarea name="prompt">Futuristic yellow sports car in dramatic low-light studio, elegant reflections, cinematic composition, no text.</textarea>
               </label>
-              <button class="generate-btn" type="submit">Generate concepts</button>
+              <button class="generate-btn" type="submit">Generate images</button>
             </form>
           </div>
 
@@ -318,46 +336,113 @@
       const outputGrid = document.getElementById('outputGrid');
       const variantInfo = document.getElementById('variantInfo');
       const vgForm = document.getElementById('vgForm');
+      const generateBtn = vgForm.querySelector('.generate-btn');
 
-      const variantImages = [
-        './assets/generated/edges.png',
-        './assets/generated/asset-scaler.png',
-        './assets/generated/brand-guardian.png',
-        './assets/generated/content-kalender.png',
-      ];
+      function escapeHTML(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
 
-      function renderOutputs(meta) {
+      /* Show placeholder skeleton cards while generating */
+      function renderPlaceholders(count, meta) {
         outputGrid.innerHTML = '';
-        variantImages.forEach((src, idx) => {
+        for (let i = 0; i < count; i++) {
           const card = document.createElement('article');
           card.className = 'output-card';
           card.innerHTML = `
-            <div class="out-img"><img src="${src}" alt="Generated concept ${idx + 1}" /></div>
+            <div class="out-img" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;">
+              <span><i class="bi bi-hourglass-split" style="font-size:24px;display:block;margin-bottom:8px;text-align:center"></i>Generating…</span>
+            </div>
+            <div class="out-meta">
+              <h3>Variant ${i + 1}</h3>
+              <p>${escapeHTML(meta.style)} · ${escapeHTML(meta.market)}</p>
+            </div>
+          `;
+          outputGrid.appendChild(card);
+        }
+        variantInfo.textContent = `Generating ${count} image${count > 1 ? 's' : ''}…`;
+      }
+
+      /* Render generated image cards */
+      function renderImages(images, meta) {
+        outputGrid.innerHTML = '';
+        images.forEach((src, idx) => {
+          const card = document.createElement('article');
+          card.className = 'output-card';
+          card.innerHTML = `
+            <div class="out-img"><img src="${src}" alt="Generated image ${idx + 1}" /></div>
             <div class="out-meta">
               <h3>Variant ${idx + 1}</h3>
-              <p>${meta.style} · ${meta.market} · ${meta.objective}</p>
+              <p>${escapeHTML(meta.style)} · ${escapeHTML(meta.market)} · ${escapeHTML(meta.objective)}</p>
             </div>
           `;
           outputGrid.appendChild(card);
         });
-        variantInfo.textContent = `${variantImages.length} visual variants`;
+        variantInfo.textContent = `${images.length} generated image${images.length !== 1 ? 's' : ''}`;
       }
 
-      vgForm.addEventListener('submit', (event) => {
+      /* Generate images via Seedream 4 */
+      async function generateImages(prompt, count, meta) {
+        const results = [];
+
+        /* Fire all requests in parallel (1 image each) */
+        const requests = Array.from({ length: count }, () =>
+          fetch('/api/image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, aspect_ratio: '4:3', max_images: 1 })
+          }).then(r => {
+            if (!r.ok) throw new Error('Image generation failed');
+            return r.json();
+          })
+        );
+
+        const responses = await Promise.allSettled(requests);
+        responses.forEach(r => {
+          if (r.status === 'fulfilled' && r.value.images?.length) {
+            results.push(...r.value.images);
+          }
+        });
+
+        return results;
+      }
+
+      vgForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const formData = new FormData(vgForm);
-        renderOutputs({
+        const meta = {
           objective: String(formData.get('objective') || 'Campaign concept'),
           market: String(formData.get('market') || 'Pan-Europe'),
           style: String(formData.get('style') || 'Cinematic premium'),
-        });
+          prompt: String(formData.get('prompt') || ''),
+        };
+
+        const imageCount = 4;
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating…';
+        renderPlaceholders(imageCount, meta);
+
+        try {
+          const images = await generateImages(meta.prompt, imageCount, meta);
+
+          if (images.length > 0) {
+            renderImages(images, meta);
+          } else {
+            variantInfo.textContent = 'Generation failed — try again';
+          }
+        } catch (err) {
+          console.error('Visual Generator error:', err);
+          variantInfo.textContent = 'Generation failed — try again';
+        } finally {
+          generateBtn.disabled = false;
+          generateBtn.textContent = 'Generate images';
+        }
       });
 
-      renderOutputs({
-        objective: 'Launch Emira spring campaign',
-        market: 'Pan-Europe',
-        style: 'Cinematic premium',
-      });
+      /* Initial static state */
+      variantInfo.textContent = 'Enter a prompt and generate';
 
       document.querySelectorAll('.app-nav-item[data-href]').forEach((item) => {
         const go = () => {
@@ -487,7 +572,7 @@
               + '<p class="sp-name">Cliff Allison</p>'
               + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
               + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
-              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '<p style="margin-top:16px;font-size:11px;color:var(--muted)">This will end your session across all Brand Kitchen tools.</p>'
               + '</div>'
         }
       };

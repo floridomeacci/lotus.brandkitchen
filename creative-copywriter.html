@@ -6,9 +6,10 @@
     <title>Creative Copywriter · Lotus Brand Kitchen</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./llm.js"></script>
     <style>
       .cc-content { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
 
@@ -36,25 +37,25 @@
       }
       .msg-ai .msg-avatar { background:transparent; padding:2px; }
       .msg-ai .msg-avatar img { width:100%; height:100%; object-fit:contain; }
-      .msg-user .msg-avatar { background:rgba(255,255,255,.08); color:rgba(255,255,255,.5); }
+      .msg-user .msg-avatar { background:rgba(255,255,255,.08); color:var(--muted); }
 
       .msg-bubble { border-radius:14px; padding:12px 16px; font-size:13.5px; line-height:1.6; }
-      .msg-ai .msg-bubble { background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); color:#ddd; }
-      .msg-user .msg-bubble { background:rgba(237,229,0,.08); border:1px solid rgba(237,229,0,.18); color:#eee; }
+      .msg-ai .msg-bubble { background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08); color:var(--text); }
+      .msg-user .msg-bubble { background:rgba(237,229,0,.08); border:1px solid rgba(237,229,0,.18); color:var(--text); }
 
-      .msg-bubble h4 { margin:0 0 6px; font-size:12px; color:#ede500; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+      .msg-bubble h4 { margin:0 0 6px; font-size:12px; color:var(--yellow); font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
       .msg-bubble p { margin:0 0 6px; }
       .msg-bubble p:last-child { margin:0; }
       .msg-bubble ul { margin:4px 0 6px; padding-left:18px; }
       .msg-bubble li { margin-bottom:3px; }
       .msg-bubble .source-tag {
         display:inline-block; font-size:9px; font-weight:600; padding:2px 6px; border-radius:4px;
-        background:rgba(255,255,255,.06); color:rgba(255,255,255,.35); margin-right:4px; margin-top:4px;
+        background:rgba(255,255,255,.06); color:var(--muted); margin-right:4px; margin-top:4px;
       }
 
       .typing-indicator { display:flex; gap:4px; padding:12px 14px; }
       .typing-indicator span {
-        width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.25);
+        width:6px; height:6px; border-radius:50%; background:var(--muted);
         animation:typeBounce .6s ease infinite alternate;
       }
       .typing-indicator span:nth-child(2) { animation-delay:.15s; }
@@ -66,7 +67,7 @@
 
       .widget {
         flex:1; display:flex; align-items:center; gap:10px;
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08);
+        background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08);
         border-radius:12px; padding:12px 14px; cursor:default;
         transition:border-color .15s;
       }
@@ -81,24 +82,25 @@
       .widget-icon.brand { background:rgba(251,146,60,.1);  color:#fb923c; }
 
       .widget-text { display:flex; flex-direction:column; gap:1px; min-width:0; }
-      .widget-title { font-size:12px; font-weight:700; color:#eee; letter-spacing:.02em; white-space:nowrap; }
-      .widget-desc  { font-size:10px; color:rgba(255,255,255,.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .widget-count { font-size:9px; font-weight:600; color:rgba(255,255,255,.25); margin-left:auto; white-space:nowrap; flex-shrink:0; }
+      .widget-title { font-size:12px; font-weight:700; color:var(--text); letter-spacing:.02em; white-space:nowrap; }
+      .widget-desc  { font-size:10px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .widget-count { font-size:9px; font-weight:600; color:var(--muted); margin-left:auto; white-space:nowrap; flex-shrink:0; }
 
       /* ── Input bar ── */
       .chat-input-bar {
         display:flex; gap:8px; padding:0 0 2px; flex-shrink:0;
       }
       .chat-input {
-        flex:1; background:var(--panel,#212126); border:1px solid rgba(255,255,255,.1);
-        border-radius:12px; padding:12px 16px; color:#eee; font-size:13.5px;
-        font-family:'Inter',sans-serif; resize:none; min-height:22px; max-height:120px;
+        flex:1; background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.1);
+        border-radius:12px; padding:12px 16px; color:var(--text); font-size:13.5px;
+        font-family:'Plus Jakarta Sans',sans-serif; resize:none; min-height:22px; max-height:120px;
+        transition:border-color .2s;
       }
       .chat-input:focus { outline:none; border-color:rgba(237,229,0,.4); }
-      .chat-input::placeholder { color:rgba(255,255,255,.25); }
+      .chat-input::placeholder { color:var(--muted); }
       .send-btn {
         width:44px; height:44px; border-radius:12px; border:none; flex-shrink:0;
-        background:var(--yellow,#fff200); color:#1a1a1a; font-size:17px;
+        background:var(--yellow,#fff200); color:#111316; font-size:17px;
         cursor:pointer; display:flex; align-items:center; justify-content:center;
         transition:opacity .15s;
       }
@@ -106,7 +108,7 @@
       .send-btn:disabled { opacity:.3; cursor:default; }
 
       .active-app { color:#f3f5fb; font-weight:600; }
-      .active-app .ico { color:#ede500; }
+      .active-app .ico { color:var(--yellow); }
 
       @media (max-width:700px) {
         .widgets-row { flex-direction:column; }
@@ -209,7 +211,7 @@
               <div class="msg-bubble">
                 <h4>Refined Headline</h4>
                 <p><strong>RENNSTRECKE TRIFFT STRASSE. EMEYA.</strong></p>
-                <p style="font-size:11px; color:rgba(255,255,255,.4); margin-top:6px;">4 words + model name. Maintains motorsport heritage positioning while meeting character limit. Brand-compliant per Lotus ToV guidelines v3.2.</p>
+                <p style="font-size:11px; color:var(--muted); margin-top:6px;">4 words + model name. Maintains motorsport heritage positioning while meeting character limit. Brand-compliant per Lotus ToV guidelines v3.2.</p>
                 <span class="source-tag">RAG: Brand ToV</span>
               </div>
             </div>
@@ -257,28 +259,49 @@
       var chatInput = document.getElementById('chatInput');
       var sendBtn = document.getElementById('sendBtn');
 
-      var demoResponses = [
-        { heading: 'On-Brand Copy', body: 'Based on the Lotus Tone of Voice guidelines and competitor analysis, here\'s your adapted copy:', list: ['Headline: EMEYA. PURE ELECTRIC GRAND TOURING.', 'Subline: Where motorsport precision meets zero-emission performance.', 'CTA: Experience the future of driving.'], sources: ['RAG: Brand ToV', 'Perplexity.ai', 'LLaMA 3 8B'] },
-        { heading: 'Knowledge Retrieved', body: 'Found 3 relevant documents from the brand and product knowledge base:', list: ['Lotus Emeya — Full specification sheet (2025 MY)', 'Brand positioning strategy — "For The Drivers" pillar', 'German market legal requirements for EV claims'], sources: ['RAG: Product', 'RAG: Brand', 'RAG: Market'] },
-        { heading: 'Translation — French', body: 'Translated and culturally adapted for the French market:', list: ['EN: "Born on the track. Built for the road." → FR: "Née sur circuit. Conçue pour la route."', 'Cultural note: French audiences favour elegance and savoir-faire — lean into design heritage.'], sources: ['RAG: Market FR', 'LLaMA 3 8B'] },
-      ];
-      var responseIdx = 0;
+      var SYSTEM_PROMPT = 'You are the Lotus Brand Kitchen Creative Copywriter — an expert automotive copywriter for Lotus Cars. '
+        + 'You have deep knowledge of Lotus brand values: precision, lightweight engineering, "For The Drivers" philosophy, and motorsport heritage. '
+        + 'Models include Emira, Emeya, Eletre, Evija. Always write in Lotus tone of voice: confident, precise, aspirational but never arrogant. '
+        + 'When asked for copy, provide Headlines, Sublines, and CTAs formatted clearly. '
+        + 'When asked to translate, adapt culturally, not just literally. '
+        + 'Keep responses concise and structured. Use bullet points for lists.';
 
       function addMessage(text, isUser) {
         var div = document.createElement('div');
         div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
         if (isUser) {
-          div.innerHTML = '<div class="msg-avatar">CA</div><div class="msg-bubble"><p>' + text + '</p></div>';
+          div.innerHTML = '<div class="msg-avatar">CA</div><div class="msg-bubble"><p>' + escapeHtml(text) + '</p></div>';
         }
         chatArea.appendChild(div);
         chatArea.scrollTop = chatArea.scrollHeight;
         return div;
       }
 
-      function addAIResponse() {
-        var r = demoResponses[responseIdx % demoResponses.length];
-        responseIdx++;
+      function escapeHtml(str) {
+        var d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+      }
 
+      function formatResponse(text) {
+        // Convert markdown-style formatting to HTML
+        var html = escapeHtml(text);
+        // Bold
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        // Bullet lists: lines starting with - or •
+        html = html.replace(/^[\-•]\s+(.+)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+        // Paragraphs
+        html = html.split(/\n{2,}/).map(function(p) {
+          if (p.indexOf('<ul>') === -1 && p.indexOf('<li>') === -1) return '<p>' + p + '</p>';
+          return p;
+        }).join('');
+        // Single newlines
+        html = html.replace(/\n/g, '<br>');
+        return html;
+      }
+
+      async function addAIResponse(userText) {
         // Typing indicator
         var typingDiv = document.createElement('div');
         typingDiv.className = 'msg msg-ai';
@@ -286,17 +309,33 @@
         chatArea.appendChild(typingDiv);
         chatArea.scrollTop = chatArea.scrollHeight;
 
-        setTimeout(function() {
+        try {
+          var output = await LLM.call({
+            prompt: userText,
+            system: SYSTEM_PROMPT,
+            max_tokens: 1024,
+            temperature: 0.6
+          });
+
           typingDiv.remove();
           var msg = document.createElement('div');
           msg.className = 'msg msg-ai';
-          var sources = r.sources.map(function(s) { return '<span class="source-tag">' + s + '</span>'; }).join('');
-          var listHtml = r.list ? '<ul>' + r.list.map(function(l) { return '<li>' + l + '</li>'; }).join('') + '</ul>' : '';
-          msg.innerHTML = '<div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div><div class="msg-bubble"><h4>' + r.heading + '</h4><p>' + r.body + '</p>' + listHtml + sources + '</div>';
+          msg.innerHTML = '<div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>'
+            + '<div class="msg-bubble">' + formatResponse(output)
+            + '<span class="source-tag">DeepSeek V3</span>'
+            + '<span class="source-tag">RAG: Brand ToV</span>'
+            + '</div>';
           chatArea.appendChild(msg);
           chatArea.scrollTop = chatArea.scrollHeight;
-          sendBtn.disabled = false;
-        }, 1800);
+        } catch (err) {
+          typingDiv.remove();
+          var errMsg = document.createElement('div');
+          errMsg.className = 'msg msg-ai';
+          errMsg.innerHTML = '<div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>'
+            + '<div class="msg-bubble"><p style="color:var(--muted)">⚠ Could not reach the AI service. Please try again.</p></div>';
+          chatArea.appendChild(errMsg);
+        }
+        sendBtn.disabled = false;
       }
 
       function sendMessage() {
@@ -306,7 +345,7 @@
         addMessage(text, true);
         chatInput.value = '';
         chatInput.style.height = 'auto';
-        setTimeout(addAIResponse, 300);
+        addAIResponse(text);
       }
 
       sendBtn.addEventListener('click', sendMessage);
@@ -431,7 +470,7 @@
               + '<p class="sp-name">Cliff Allison</p>'
               + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
               + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
-              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '<p style="margin-top:16px;font-size:11px;color:var(--muted)">This will end your session across all Brand Kitchen tools.</p>'
               + '</div>'
         }
       };

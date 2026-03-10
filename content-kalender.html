@@ -6,9 +6,10 @@
     <title>Cross Market Content Planner · Lotus Brand Kitchen</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./llm.js"></script>
     <style>
       .planner-content {
         height: 100vh;
@@ -26,7 +27,7 @@
         margin-bottom: 18px;
         flex-shrink: 0;
       }
-      .planner-head p { margin: 0; color: #ede500; font-weight: 600; font-size: 13px; }
+      .planner-head p { margin: 0; color: var(--yellow); font-weight: 600; font-size: 13px; }
       .planner-head h1 { margin: 8px 0 0; font-size: clamp(28px,3.4vw,40px); letter-spacing:.06em; font-weight:500; }
 
       /* ─── Toolbar ─── */
@@ -40,14 +41,19 @@
       }
       .planner-toolbar select,
       .planner-toolbar button {
-        background: var(--panel, #212126);
-        color: var(--text, #f2f1f0);
+        background: var(--panel, #1c1e26);
+        color: var(--text, #eef0f4);
         border: 1px solid rgba(255,255,255,.12);
         border-radius: 8px;
         padding: 8px 14px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 13px;
         cursor: pointer;
+        transition: background .2s, border-color .2s;
+      }
+      .planner-toolbar select:hover,
+      .planner-toolbar button:hover {
+        border-color: rgba(255,255,255,.22);
       }
       .planner-toolbar select { min-width: 200px; }
       .planner-toolbar .view-tabs {
@@ -67,9 +73,12 @@
         letter-spacing: .06em;
         transition: background .2s, color .2s;
       }
+      .planner-toolbar .view-tab:hover:not(.active) {
+        background: rgba(255,255,255,.06);
+      }
       .planner-toolbar .view-tab.active {
         background: var(--yellow, #fff200);
-        color: #1a1a1a;
+        color: #111316;
       }
       .planner-toolbar .spacer { flex: 1; }
       .planner-toolbar .legend {
@@ -77,7 +86,7 @@
         gap: 14px;
         align-items: center;
         font-size: 11px;
-        color: rgba(255,255,255,.55);
+        color: var(--card-text);
       }
       .legend-chip {
         display: inline-flex;
@@ -89,7 +98,7 @@
         border-radius: 3px;
         display: inline-block;
       }
-      .legend-chip .t-holiday  { background: #ede500; }
+      .legend-chip .t-holiday  { background: var(--yellow); }
       .legend-chip .t-launch   { background: #4ea8ff; }
       .legend-chip .t-offer    { background: #34d399; }
       .legend-chip .t-campaign { background: #f472b6; }
@@ -103,7 +112,7 @@
         overflow: auto;
         border: 1px solid rgba(255,255,255,.08);
         border-radius: 14px;
-        background: var(--panel, #212126);
+        background: var(--panel, #1c1e26);
       }
 
       .calendar-table {
@@ -117,20 +126,20 @@
         position: sticky;
         top: 0;
         z-index: 3;
-        background: #1a1a1e;
+        background: var(--panel);
         padding: 10px 4px;
         text-align: center;
         font-weight: 600;
         font-size: 11px;
         letter-spacing: .05em;
-        color: rgba(255,255,255,.5);
+        color: var(--muted);
         border-bottom: 1px solid rgba(255,255,255,.1);
       }
       .calendar-table thead th:first-child {
         width: 140px;
         text-align: left;
         padding-left: 16px;
-        color: rgba(255,255,255,.7);
+        color: var(--card-text);
       }
 
       .calendar-table tbody tr {
@@ -153,7 +162,7 @@
         padding-left: 16px;
         font-weight: 600;
         font-size: 13px;
-        color: rgba(255,255,255,.85);
+        color: var(--text);
         vertical-align: middle;
       }
 
@@ -172,7 +181,7 @@
         max-width: 100%;
         cursor: default;
       }
-      .ev-holiday  { background: rgba(237,229,0,.22); color: #ede500; }
+      .ev-holiday  { background: rgba(237,229,0,.22); color: var(--yellow); }
       .ev-launch   { background: rgba(78,168,255,.2);  color: #4ea8ff; }
       .ev-offer    { background: rgba(52,211,153,.18); color: #34d399; }
       .ev-campaign { background: rgba(244,114,182,.18); color: #f472b6; }
@@ -195,7 +204,7 @@
       .ai-suggestion {
         flex-shrink: 0;
         margin-top: 12px;
-        background: var(--panel, #212126);
+        background: var(--panel, #1c1e26);
         border: 1px solid rgba(255,255,255,.08);
         border-radius: 12px;
         padding: 14px 20px;
@@ -217,7 +226,7 @@
       .ai-suggestion .ai-text {
         flex: 1;
         font-size: 12px;
-        color: rgba(255,255,255,.65);
+        color: var(--card-text);
         line-height: 1.5;
       }
       .ai-suggestion .ai-text strong {
@@ -226,23 +235,180 @@
       }
       .ai-suggestion .ai-action {
         background: var(--yellow, #fff200);
-        color: #1a1a1a;
+        color: #111316;
         border: none;
         border-radius: 8px;
         padding: 8px 18px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
         white-space: nowrap;
+        transition: opacity .2s;
+      }
+      .ai-suggestion .ai-action:hover {
+        opacity: .85;
       }
 
+      /* ─── List view ─── */
+      .list-view { display: none; flex-direction: column; gap: 6px; padding: 16px; }
+      .list-view.active { display: flex; }
+      .calendar-wrap.hidden { display: none; }
+
+      .list-event {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        background: rgba(255,255,255,.03);
+        border: 1px solid rgba(255,255,255,.06);
+        cursor: pointer;
+        transition: background .18s, border-color .18s;
+      }
+      .list-event:hover {
+        background: rgba(255,255,255,.07);
+        border-color: rgba(255,255,255,.14);
+      }
+      .list-event-date {
+        min-width: 56px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .list-event-date strong {
+        display: block;
+        font-size: 22px;
+        color: var(--text);
+        line-height: 1.1;
+      }
+      .list-event-pill {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        min-width: 68px;
+        text-align: center;
+      }
+      .list-event-pill.t-holiday  { background: rgba(237,229,0,.22); color: var(--yellow); }
+      .list-event-pill.t-launch   { background: rgba(78,168,255,.2);  color: #4ea8ff; }
+      .list-event-pill.t-offer    { background: rgba(52,211,153,.18); color: #34d399; }
+      .list-event-pill.t-campaign { background: rgba(244,114,182,.18); color: #f472b6; }
+      .list-event-pill.t-social   { background: rgba(167,139,250,.18); color: #a78bfa; }
+      .list-event-label {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .list-event-month {
+        font-size: 11px;
+        color: var(--muted);
+        min-width: 40px;
+        text-align: right;
+      }
+
+      .list-empty {
+        text-align: center;
+        padding: 48px 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* ─── Event detail modal ─── */
+      .event-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        background: rgba(0,0,0,.55);
+        backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .event-modal-overlay.open { display: flex; }
+      .event-modal {
+        background: var(--panel, #1c1e26);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 16px;
+        width: 420px;
+        max-width: 92vw;
+        box-shadow: 0 20px 60px rgba(0,0,0,.5);
+        overflow: hidden;
+        animation: modalIn .2s ease-out;
+      }
+      @keyframes modalIn {
+        from { opacity: 0; transform: scale(.95) translateY(8px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      .event-modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+      }
+      .event-modal-head h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .event-modal-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+        transition: color .15s, background .15s;
+      }
+      .event-modal-close:hover {
+        color: var(--text);
+        background: rgba(255,255,255,.08);
+      }
+      .event-modal-body {
+        padding: 20px 22px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .event-modal-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 13px;
+        color: var(--card-text);
+      }
+      .event-modal-row .em-icon {
+        color: var(--muted);
+        font-size: 15px;
+        margin-top: 1px;
+        min-width: 18px;
+        text-align: center;
+      }
+      .event-modal-row strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* Make event pills clickable in calendar grid */
+      .ev { cursor: pointer; transition: filter .15s; }
+      .ev:hover { filter: brightness(1.25); }
+
       .active-app { color: #f3f5fb; font-weight: 600; }
-      .active-app .ico { color: #ede500; }
+      .active-app .ico { color: var(--yellow); }
 
       @media (max-width: 760px) {
         .planner-content { height: auto; overflow: visible; padding: 26px 18px 24px; }
         .planner-head { flex-direction: column; align-items: flex-start; }
+        .event-modal { width: 100%; max-width: 100vw; border-radius: 16px 16px 0 0; }
       }
     </style>
   </head>
@@ -319,6 +485,7 @@
             <button class="view-tab active" data-view="year">Year</button>
             <button class="view-tab" data-view="quarter">Quarter</button>
             <button class="view-tab" data-view="month">Month</button>
+            <button class="view-tab" data-view="list"><i class="bi bi-list-ul" style="margin-right:4px"></i>List</button>
           </div>
 
           <div class="spacer"></div>
@@ -341,6 +508,9 @@
           </table>
         </div>
 
+        <!-- List view -->
+        <div class="calendar-wrap list-view" id="listView"></div>
+
         <!-- AI Suggestion strip -->
         <div class="ai-suggestion">
           <div class="ai-icon"><i class="bi bi-stars"></i></div>
@@ -351,6 +521,17 @@
           <button class="ai-action">Auto-fill Gaps</button>
         </div>
       </main>
+    </div>
+
+    <!-- Event detail modal -->
+    <div class="event-modal-overlay" id="eventModalOverlay">
+      <div class="event-modal">
+        <div class="event-modal-head">
+          <h3 id="emTitle">Event</h3>
+          <button class="event-modal-close" id="emClose"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="event-modal-body" id="emBody"></div>
+      </div>
     </div>
 
     <script>
@@ -422,8 +603,46 @@
         return marketPlans[market] || marketPlans['pan-europe'];
       }
 
-      /* ─── Render calendar ─── */
+      /* ─── Event detail modal ─── */
+      const emOverlay = document.getElementById('eventModalOverlay');
+      const emTitle   = document.getElementById('emTitle');
+      const emBody    = document.getElementById('emBody');
+      const emClose   = document.getElementById('emClose');
+
+      const typeLabels = { holiday: 'Holiday', launch: 'Product Launch', offer: 'Offer / Promotion', campaign: 'Campaign', social: 'Social Post' };
+      const typeIcons  = { holiday: 'bi-calendar-heart', launch: 'bi-rocket-takeoff', offer: 'bi-tag', campaign: 'bi-megaphone', social: 'bi-chat-square-dots' };
+
+      function openEventModal(ev, monthName, market) {
+        emTitle.textContent = ev.label;
+        const fullDate = `${monthName} ${ev.d}, 2025`;
+        const marketLabel = marketSelect.querySelector('[value="' + market + '"]')?.textContent || market;
+        emBody.innerHTML =
+          `<div class="event-modal-row"><span class="em-icon"><i class="bi ${typeIcons[ev.type] || 'bi-calendar-event'}"></i></span><span><strong>Type</strong><br>${typeLabels[ev.type] || ev.type}</span></div>` +
+          `<div class="event-modal-row"><span class="em-icon"><i class="bi bi-calendar3"></i></span><span><strong>Date</strong><br>${_escapeHTML(fullDate)}</span></div>` +
+          `<div class="event-modal-row"><span class="em-icon"><i class="bi bi-geo-alt"></i></span><span><strong>Market</strong><br>${_escapeHTML(marketLabel)}</span></div>` +
+          `<div class="event-modal-row"><span class="em-icon"><i class="bi bi-info-circle"></i></span><span><strong>Status</strong><br>Scheduled</span></div>`;
+        emOverlay.classList.add('open');
+      }
+
+      emClose.addEventListener('click', () => emOverlay.classList.remove('open'));
+      emOverlay.addEventListener('click', (e) => { if (e.target === emOverlay) emOverlay.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') emOverlay.classList.remove('open'); });
+
+      /* ─── Render calendar (grid) ─── */
+      const calWrap  = document.querySelector('.calendar-wrap:not(.list-view)');
+      const listView = document.getElementById('listView');
+
       function renderCalendar(market, view) {
+        /* Toggle grid vs list */
+        if (view === 'list') {
+          calWrap.classList.add('hidden');
+          listView.classList.add('active');
+          renderListView(market);
+          return;
+        }
+        calWrap.classList.remove('hidden');
+        listView.classList.remove('active');
+
         const data = getMarketData(market);
         const head = document.getElementById('calHead');
         const body = document.getElementById('calBody');
@@ -454,17 +673,58 @@
             }
             const dayEvents = events.filter(e => e.d === d);
             const isGap = dayEvents.length === 0 && _isWeekday(2025, mi, d);
-            // Mark weeks with no events as gap candidates (only highlight some for demo)
             const gapClass = (isGap && d % 7 === 0 && events.length < 3) ? ' gap-cell' : '';
             bodyHTML += '<td class="' + gapClass + '">';
-            dayEvents.forEach(e => {
-              bodyHTML += '<span class="ev ev-' + e.type + '" title="' + _escapeAttr(e.label) + '">' + _escapeHTML(e.label) + '</span>';
+            dayEvents.forEach((e, ei) => {
+              bodyHTML += '<span class="ev ev-' + e.type + '" data-month="' + m + '" data-idx="' + ei + '" title="' + _escapeAttr(e.label) + '">' + _escapeHTML(e.label) + '</span>';
             });
             bodyHTML += '</td>';
           }
           bodyHTML += '</tr>';
         });
         body.innerHTML = bodyHTML;
+
+        /* Attach click handlers to event pills */
+        body.querySelectorAll('.ev').forEach(el => {
+          el.addEventListener('click', () => {
+            const m = el.dataset.month;
+            const idx = parseInt(el.dataset.idx, 10);
+            const mkt = marketSelect.value;
+            const evts = getMarketData(mkt)[m] || [];
+            if (evts[idx]) openEventModal(evts[idx], m, mkt);
+          });
+        });
+      }
+
+      /* ─── Render list view ─── */
+      function renderListView(market) {
+        const data = getMarketData(market);
+        const allEvents = [];
+        months.forEach(m => {
+          (data[m] || []).forEach(ev => allEvents.push({ ...ev, month: m, monthIdx: months.indexOf(m) }));
+        });
+        allEvents.sort((a, b) => a.monthIdx - b.monthIdx || a.d - b.d);
+
+        if (allEvents.length === 0) {
+          listView.innerHTML = '<div class="list-empty">No events for this market.</div>';
+          return;
+        }
+
+        listView.innerHTML = allEvents.map((ev, i) =>
+          `<div class="list-event" data-list-idx="${i}">` +
+            `<div class="list-event-date"><strong>${ev.d}</strong>${ev.month}</div>` +
+            `<span class="list-event-pill t-${ev.type}">${ev.type}</span>` +
+            `<span class="list-event-label">${_escapeHTML(ev.label)}</span>` +
+            `<span class="list-event-month">${ev.month} 2025</span>` +
+          `</div>`
+        ).join('');
+
+        listView.querySelectorAll('.list-event').forEach(el => {
+          el.addEventListener('click', () => {
+            const ev = allEvents[parseInt(el.dataset.listIdx, 10)];
+            if (ev) openEventModal(ev, ev.month, market);
+          });
+        });
       }
 
       function _isWeekday(year, month, day) {
@@ -496,6 +756,65 @@
       });
 
       renderCalendar('pan-europe', 'year');
+
+      /* ─── Auto-fill Gaps (LLM) ─── */
+      const aiFillBtn = document.querySelector('.ai-action');
+      const aiTextEl  = document.querySelector('.ai-text');
+
+      if (aiFillBtn) {
+        aiFillBtn.addEventListener('click', async () => {
+          const market = marketSelect.value;
+          const data   = getMarketData(market);
+
+          /* Summarise existing events for the LLM */
+          const planSummary = Object.entries(data)
+            .map(([m, evts]) => evts.length ? `${m}: ${evts.map(e => e.label + ' (day ' + e.d + ', ' + e.type + ')').join(', ')}` : `${m}: (empty)`)
+            .join('\n');
+
+          aiFillBtn.disabled = true;
+          aiFillBtn.textContent = 'Analysing…';
+          aiTextEl.innerHTML = '<strong>AI is analysing content gaps…</strong>';
+
+          try {
+            const raw = await window.LLM.call({
+              system: 'You are a senior automotive marketing strategist specialising in the Lotus Cars brand (Emeya, Eletre, Emira). You plan cross-market content calendars.',
+              prompt: `Here is the current ${market} content calendar for 2025:\n\n${planSummary}\n\nIdentify content gaps — months that are empty or under-represented — and suggest 3-6 new events/campaigns/posts to fill them. For each suggestion, return a JSON array of objects with: { "month": "Jan"|"Feb"|…, "day": 1-28, "type": "campaign"|"social"|"launch"|"offer"|"holiday", "label": "short title" }.\n\nReturn ONLY the JSON array, no other text.`,
+              max_tokens: 600,
+              temperature: 0.7
+            });
+
+            let suggestions;
+            try {
+              const cleaned = raw.replace(/^```json?\s*/i, '').replace(/\s*```$/i, '').trim();
+              suggestions = JSON.parse(cleaned);
+            } catch { throw new Error('Invalid JSON from AI'); }
+
+            if (!Array.isArray(suggestions) || suggestions.length === 0) throw new Error('No suggestions');
+
+            /* Inject suggestions into marketPlans for the selected market */
+            const target = marketPlans[market] || marketPlans['pan-europe'];
+            suggestions.forEach(s => {
+              const m = s.month;
+              if (target[m]) {
+                target[m].push({ d: Number(s.day), type: s.type, label: s.label });
+              }
+            });
+
+            /* Re-render calendar */
+            renderCalendar(market, currentView);
+
+            /* Update suggestion strip */
+            const labels = suggestions.map(s => `${s.label} (${s.month} ${s.day})`).join(', ');
+            aiTextEl.innerHTML = `<strong>AI added ${suggestions.length} events:</strong> ${_escapeHTML(labels)}`;
+          } catch (err) {
+            console.error('Auto-fill error:', err);
+            aiTextEl.innerHTML = '<strong>⚠ Could not auto-fill gaps.</strong> Please try again.';
+          } finally {
+            aiFillBtn.disabled = false;
+            aiFillBtn.textContent = 'Auto-fill Gaps';
+          }
+        });
+      }
 
       /* ─── Sidebar nav ─── */
       document.querySelectorAll('.app-nav-item[data-href]').forEach(item => {
@@ -617,7 +936,7 @@
               + '<p class="sp-name">Cliff Allison</p>'
               + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
               + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
-              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '<p style="margin-top:16px;font-size:11px;color:var(--muted)">This will end your session across all Brand Kitchen tools.</p>'
               + '</div>'
         }
       };

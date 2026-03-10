@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -15,6 +15,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./llm.js"></script>
     <style>
       .briefing-content {
         height: 100vh;
@@ -33,7 +34,7 @@
 
       .briefing-head p {
         margin: 0;
-        color: #ede500;
+        color: var(--yellow);
         font-weight: 600;
         font-size: 13px;
       }
@@ -49,7 +50,7 @@
       .briefing-shell {
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 14px;
-        background: #1a1e28;
+        background: var(--card);
         display: grid;
         grid-template-columns: 310px 1fr;
         gap: 0;
@@ -70,12 +71,12 @@
         font-size: 14px;
         font-weight: 700;
         letter-spacing: 0.04em;
-        color: #e8ecf5;
+        color: var(--text);
       }
 
       .config-card {
         border: 1px solid rgba(255, 255, 255, 0.08);
-        background: #121620;
+        background: var(--bg);
         border-radius: 10px;
         padding: 12px;
         margin-bottom: 10px;
@@ -92,7 +93,7 @@
         display: grid;
         gap: 4px;
         font-size: 10px;
-        color: #8f98aa;
+        color: var(--card-text);
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
@@ -100,13 +101,25 @@
       .cfg-grid input,
       .cfg-grid select,
       .cfg-grid textarea {
-        background: #0f131b;
+        background: rgba(0,0,0,.2);
         border: 1px solid rgba(255, 255, 255, 0.11);
         border-radius: 8px;
-        color: #e9edf5;
+        color: var(--text);
         font-size: 12px;
         padding: 8px 9px;
         font-family: inherit;
+        transition: border-color .2s;
+      }
+      .cfg-grid input:hover,
+      .cfg-grid select:hover,
+      .cfg-grid textarea:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .cfg-grid input:focus,
+      .cfg-grid select:focus,
+      .cfg-grid textarea:focus {
+        border-color: rgba(255, 242, 0, 0.4);
+        outline: none;
       }
 
       .cfg-grid textarea {
@@ -127,13 +140,13 @@
         font-size: 9px;
         font-weight: 600;
         border: 1px solid rgba(255, 255, 255, 0.14);
-        color: #c5cee0;
+        color: var(--card-text);
         background: rgba(255, 255, 255, 0.03);
       }
 
       .tag-cfg.on {
         border-color: rgba(237, 229, 0, 0.5);
-        color: #eee46d;
+        color: var(--yellow);
         background: rgba(237, 229, 0, 0.07);
       }
 
@@ -142,13 +155,14 @@
         margin-top: 12px;
         border: 1px solid rgba(237, 229, 0, 0.45);
         background: rgba(237, 229, 0, 0.08);
-        color: #eee46d;
+        color: var(--yellow);
         border-radius: 999px;
         font-size: 12px;
         font-weight: 700;
         padding: 10px 12px;
         cursor: pointer;
         letter-spacing: 0.04em;
+        transition: background .2s, border-color .2s;
       }
 
       .generate-btn:hover {
@@ -175,7 +189,7 @@
 
       /* ═══ RIGHT: document preview ═══ */
       .preview-col {
-        background: #2a2e38;
+        background: var(--workspace);
         overflow-y: auto;
         padding: 28px;
         display: flex;
@@ -189,7 +203,7 @@
         border-radius: 4px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
         padding: 48px 52px 56px;
-        color: #1a1a1a;
+        color: #111316;
         font-family: 'Times New Roman', Georgia, serif;
         min-height: 900px;
         overflow: hidden;
@@ -202,7 +216,7 @@
         justify-content: space-between;
         margin-bottom: 6px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #1a1a1a;
+        border-bottom: 2px solid #111316;
       }
 
       .doc-logo-bar img {
@@ -214,7 +228,7 @@
         font-size: 10px;
         color: #666;
         line-height: 1.5;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
       }
 
       .doc-title {
@@ -237,7 +251,7 @@
         margin: 28px 0 10px;
         padding-bottom: 4px;
         border-bottom: 1px solid #ccc;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.1em;
@@ -250,7 +264,7 @@
       }
 
       .doc-field-label {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 9px;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -262,7 +276,7 @@
       .doc-field-value {
         font-size: 13px;
         line-height: 1.55;
-        color: #1a1a1a;
+        color: #111316;
         margin: 0;
       }
 
@@ -283,7 +297,7 @@
         border: 1px solid #bbb;
         border-radius: 3px;
         padding: 2px 7px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 9px;
         font-weight: 600;
         color: #444;
@@ -295,7 +309,7 @@
       .doc-planning-table {
         width: 100%;
         border-collapse: collapse;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 10px;
         margin-top: 4px;
         table-layout: fixed;
@@ -384,7 +398,7 @@
         margin-top: 36px;
         padding-top: 12px;
         border-top: 1px solid #ccc;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 9px;
         color: #aaa;
         display: flex;
@@ -398,7 +412,7 @@
       }
 
       .active-app .ico {
-        color: #ede500;
+        color: var(--yellow);
       }
 
       @keyframes blink {
@@ -681,6 +695,129 @@
           }
         });
       });
+
+      // ── Briefing Agent LLM Integration ──
+      (function() {
+        var genBtn = document.querySelector('.generate-btn');
+        var statusRow = document.querySelector('.status-row');
+        var docPage = document.querySelector('.doc-page');
+
+        function escapeHtml(str) {
+          var d = document.createElement('div');
+          d.textContent = str;
+          return d.innerHTML;
+        }
+
+        function getFormInputs() {
+          var inputs = document.querySelectorAll('.cfg-grid input, .cfg-grid select, .cfg-grid textarea');
+          var data = {};
+          inputs.forEach(function(el) {
+            var label = el.closest('label');
+            if (label) {
+              var key = label.childNodes[0].textContent.trim();
+              data[key] = el.value;
+            }
+          });
+          // Channels
+          var channels = [];
+          document.querySelectorAll('.tag-cfg.on').forEach(function(t) { channels.push(t.textContent.trim()); });
+          data['Channels'] = channels.join(', ');
+          return data;
+        }
+
+        genBtn.addEventListener('click', async function() {
+          var inputs = getFormInputs();
+          genBtn.disabled = true;
+          genBtn.innerHTML = '<i class="bi bi-hourglass-split"></i>&ensp;Generating…';
+          statusRow.innerHTML = '<span class="status-dot"></span>Generating brief with AI…';
+
+          var prompt = 'Generate a professional campaign brief document for Lotus Cars.\n\n'
+            + 'Campaign Title: ' + (inputs['Campaign Title'] || 'Untitled') + '\n'
+            + 'Market: ' + (inputs['Market Focus'] || 'Global') + '\n'
+            + 'Objective: ' + (inputs['Objective'] || '') + '\n'
+            + 'Target Audience: ' + (inputs['Audience'] || '') + '\n'
+            + 'Tone: ' + (inputs['Tone'] || '') + '\n'
+            + 'Channels: ' + (inputs['Channels'] || '') + '\n'
+            + 'Campaign Lead: ' + (inputs['Campaign Lead'] || '') + '\n'
+            + 'Creative Director: ' + (inputs['Creative Director'] || '') + '\n'
+            + 'Copywriter: ' + (inputs['Copywriter'] || '') + '\n'
+            + 'Media Planner: ' + (inputs['Media Planner'] || '') + '\n'
+            + 'Kick-off: ' + (inputs['Kick-off Date'] || '') + '\n'
+            + 'Go-Live: ' + (inputs['Go-Live Date'] || '') + '\n\n'
+            + 'Return the brief as a structured JSON object with these exact keys:\n'
+            + '{\n'
+            + '  "title": "campaign title",\n'
+            + '  "subtitle": "Campaign Brief · Market",\n'
+            + '  "objective": "expanded objective description (2-3 sentences)",\n'
+            + '  "audience": "expanded audience description",\n'
+            + '  "tone_direction": "expanded creative tone & direction guidance (2-3 sentences)",\n'
+            + '  "key_messages": "3-4 sentence messaging strategy",\n'
+            + '  "channels": ["channel1", "channel2"],\n'
+            + '  "team": [{"name":"Name","role":"Role","type":"LEAD|CORE|SUPPORT"}],\n'
+            + '  "phases": [{"phase":"Phase Name","deliverable":"Description","owner":"Name","date":"DD Mon","status":"DONE|IN PROGRESS|PENDING"}]\n'
+            + '}\n\n'
+            + 'Return ONLY the JSON object, no markdown fences, no explanation.';
+
+          try {
+            var output = await LLM.call({
+              prompt: prompt,
+              system: 'You are a senior campaign strategist at Lotus Cars. Generate professional, detailed campaign briefs. Always respond with valid JSON only.',
+              max_tokens: 2048,
+              temperature: 0.5
+            });
+
+            // Parse JSON from LLM output
+            var jsonStr = output.trim();
+            // Strip markdown fences if present
+            jsonStr = jsonStr.replace(/^```json?\s*/i, '').replace(/\s*```$/i, '');
+            var brief = JSON.parse(jsonStr);
+
+            renderBrief(brief);
+            statusRow.innerHTML = '<span class="status-dot"></span>Document ready — AI generated';
+          } catch (err) {
+            console.error('Brief generation error:', err);
+            statusRow.innerHTML = '<span class="status-dot" style="background:#f87171"></span>Generation failed — check console';
+          }
+
+          genBtn.disabled = false;
+          genBtn.innerHTML = '<i class="bi bi-file-earmark-text"></i>&ensp;Generate Brief';
+        });
+
+        function renderBrief(b) {
+          var channelTags = (b.channels || []).map(function(c) {
+            return '<span class="doc-channel-tag">' + escapeHtml(c) + '</span>';
+          }).join('');
+
+          var teamRows = (b.team || []).map(function(m) {
+            var cls = m.type === 'LEAD' ? 'doc-role-lead' : m.type === 'CORE' ? 'doc-role-core' : 'doc-role-support';
+            return '<tr><td>' + escapeHtml(m.name) + '</td><td>' + escapeHtml(m.role) + '</td><td><span class="doc-role-pill ' + cls + '">' + escapeHtml(m.type) + '</span></td></tr>';
+          }).join('');
+
+          var phaseRows = (b.phases || []).map(function(p) {
+            var cls = p.status === 'DONE' ? 'doc-st-done' : p.status === 'IN PROGRESS' ? 'doc-st-active' : 'doc-st-pending';
+            return '<tr><td><strong>' + escapeHtml(p.phase) + '</strong></td><td>' + escapeHtml(p.deliverable) + '</td><td>' + escapeHtml(p.owner) + '</td><td>' + escapeHtml(p.date) + '</td><td><span class="doc-status-pill ' + cls + '">' + escapeHtml(p.status) + '</span></td></tr>';
+          }).join('');
+
+          var today = new Date();
+          var dateStr = today.getDate() + ' ' + today.toLocaleString('en', {month:'long'}) + ' ' + today.getFullYear();
+
+          docPage.innerHTML = ''
+            + '<div class="doc-logo-bar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /><div class="doc-meta-right">BRIEF-' + today.getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000) + '<br/>' + dateStr + '<br/><strong>PRIORITY</strong></div></div>'
+            + '<h1 class="doc-title">' + escapeHtml(b.title) + '</h1>'
+            + '<p class="doc-subtitle">' + escapeHtml(b.subtitle) + '</p>'
+            + '<h2 class="doc-section-head">1 &ensp;Assignment</h2>'
+            + '<div class="doc-row"><div class="doc-field"><div class="doc-field-label">Objective</div><p class="doc-field-value">' + escapeHtml(b.objective) + '</p></div>'
+            + '<div class="doc-field"><div class="doc-field-label">Target Audience</div><p class="doc-field-value">' + escapeHtml(b.audience) + '</p></div></div>'
+            + '<div class="doc-field"><div class="doc-field-label">Tone &amp; Direction</div><p class="doc-field-value">' + escapeHtml(b.tone_direction) + '</p></div>'
+            + '<div class="doc-field"><div class="doc-field-label">Channels</div><div class="doc-channels">' + channelTags + '</div></div>'
+            + '<div class="doc-field"><div class="doc-field-label">Key Messages</div><p class="doc-field-value">' + escapeHtml(b.key_messages) + '</p></div>'
+            + '<h2 class="doc-section-head">2 &ensp;Team</h2>'
+            + '<table class="doc-team-table"><thead><tr><th>Name</th><th>Role</th><th>Type</th></tr></thead><tbody>' + teamRows + '</tbody></table>'
+            + '<h2 class="doc-section-head">3 &ensp;Planning</h2>'
+            + '<table class="doc-planning-table"><thead><tr><th style="width:16%">Phase</th><th style="width:34%">Deliverable</th><th style="width:18%">Owner</th><th style="width:12%">Date</th><th style="width:20%">Status</th></tr></thead><tbody>' + phaseRows + '</tbody></table>'
+            + '<div class="doc-footer"><span>Lotus Brand Kitchen · AI Generated · Confidential</span><span>Page 1 of 1</span></div>';
+        }
+      })();
     </script>
 
     <!-- Side panel overlay -->
@@ -795,7 +932,7 @@
               + '<p class="sp-name">Cliff Allison</p>'
               + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
               + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
-              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '<p style="margin-top:16px;font-size:11px;color:var(--muted)">This will end your session across all Brand Kitchen tools.</p>'
               + '</div>'
         }
       };

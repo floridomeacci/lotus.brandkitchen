@@ -6,15 +6,16 @@
     <title>Brand Guardian · Lotus Brand Kitchen</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./llm.js"></script>
     <style>
       .guardian-content { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
 
       /* Header */
       .guardian-head { display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:16px; flex-shrink:0; }
-      .guardian-head p { margin:0; color:#ede500; font-weight:600; font-size:13px; }
+      .guardian-head p { margin:0; color:var(--yellow); font-weight:600; font-size:13px; }
       .guardian-head h1 { margin:8px 0 0; font-size:clamp(28px,3.4vw,40px); letter-spacing:.06em; font-weight:500; }
 
       /* Shell */
@@ -25,7 +26,7 @@
       .left-col::-webkit-scrollbar { width:4px; }
       .left-col::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:4px; }
 
-      .section-label { margin:0; font-size:10px; font-weight:700; letter-spacing:.1em; color:rgba(255,255,255,.35); text-transform:uppercase; }
+      .section-label { margin:0; font-size:10px; font-weight:700; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
 
       /* Upload zone */
       .upload-zone {
@@ -36,31 +37,33 @@
       .upload-zone .preview-img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
       .upload-overlay {
         position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-        background:rgba(0,0,0,.55); opacity:0; transition:opacity .2s; color:#fff; font-size:12px; gap:6px;
+        background:rgba(0,0,0,.55); opacity:0; transition:opacity .2s; color:var(--text); font-size:12px; gap:6px;
       }
       .upload-zone:hover .upload-overlay { opacity:1; }
       .upload-overlay i { font-size:28px; color:var(--yellow,#fff200); }
 
-      .asset-meta { font-size:11px; color:rgba(255,255,255,.4); margin:0; }
+      .asset-meta { font-size:11px; color:var(--muted); margin:0; }
 
       /* Config inputs */
       .config-card {
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px;
+        background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px;
         display:flex; flex-direction:column; gap:10px;
       }
       .config-row { display:flex; flex-direction:column; gap:4px; }
-      .config-row label { font-size:10px; font-weight:600; color:rgba(255,255,255,.45); letter-spacing:.06em; text-transform:uppercase; }
+      .config-row label { font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
       .config-row select, .config-row input {
         background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.1); border-radius:6px;
-        color:#eee; font-size:12px; padding:7px 10px; font-family:'Inter',sans-serif;
+        color:var(--text); font-size:12px; padding:7px 10px; font-family:'Plus Jakarta Sans',sans-serif;
+        transition:border-color .2s;
       }
+      .config-row select:hover, .config-row input:hover { border-color:rgba(255,255,255,.2); }
       .toggle-row { display:flex; align-items:center; justify-content:space-between; }
-      .toggle-row span { font-size:11px; color:rgba(255,255,255,.6); }
+      .toggle-row span { font-size:11px; color:var(--card-text); }
       .toggle {
         width:36px; height:20px; border-radius:10px; background:rgba(255,255,255,.15); position:relative;
         cursor:pointer; transition:background .2s; border:none;
       }
-      .toggle.on { background:#ede500; }
+      .toggle.on { background:var(--yellow); }
       .toggle::after {
         content:''; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%;
         background:#fff; transition:transform .2s;
@@ -69,9 +72,9 @@
 
       /* Run button */
       .run-btn {
-        width:100%; padding:11px; border:none; border-radius:10px; font-family:'Inter',sans-serif;
+        width:100%; padding:11px; border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif;
         font-size:13px; font-weight:700; cursor:pointer; letter-spacing:.03em;
-        background:var(--yellow,#fff200); color:#1a1a1a; transition:opacity .2s;
+        background:var(--yellow,#fff200); color:#111316; transition:opacity .2s;
       }
       .run-btn:hover { opacity:.85; }
       .run-btn:disabled { opacity:.4; cursor:default; }
@@ -84,7 +87,7 @@
       /* Score bar */
       .score-bar {
         display:flex; align-items:center; gap:16px; padding:16px 20px;
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); border-radius:12px; flex-shrink:0;
+        background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08); border-radius:12px; flex-shrink:0;
       }
       .score-ring {
         width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center;
@@ -92,12 +95,12 @@
         background:conic-gradient(#34d399 0% var(--pct), rgba(255,255,255,.08) var(--pct) 100%);
       }
       .score-ring .inner {
-        width:58px; height:58px; border-radius:50%; background:var(--panel,#212126);
+        width:58px; height:58px; border-radius:50%; background:var(--panel,#1c1e26);
         display:flex; align-items:center; justify-content:center;
       }
       .score-info { flex:1; }
-      .score-info .score-title { margin:0; font-size:13px; font-weight:700; color:#eee; }
-      .score-info .score-sub { margin:4px 0 0; font-size:11px; color:rgba(255,255,255,.45); }
+      .score-info .score-title { margin:0; font-size:13px; font-weight:700; color:var(--text); }
+      .score-info .score-sub { margin:4px 0 0; font-size:11px; color:var(--muted); }
       .status-pill {
         border-radius:999px; font-size:10px; font-weight:700; letter-spacing:.04em; padding:6px 12px; flex-shrink:0;
       }
@@ -111,12 +114,13 @@
         border:1px solid rgba(255,255,255,.08); flex-shrink:0;
       }
       .cat-tab {
-        flex:1; padding:10px 0; border:none; background:var(--panel,#212126); color:rgba(255,255,255,.45);
-        font-family:'Inter',sans-serif; font-size:12px; font-weight:600; cursor:pointer;
+        flex:1; padding:10px 0; border:none; background:var(--panel,#1c1e26); color:var(--muted);
+        font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer;
         display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s;
       }
       .cat-tab i { font-size:15px; }
-      .cat-tab.active { background:rgba(255,255,255,.06); color:#fff; }
+      .cat-tab.active { background:rgba(255,255,255,.06); color:var(--text); }
+      .cat-tab:hover:not(.active) { background:rgba(255,255,255,.03); }
       .cat-tab .tab-score {
         font-size:9px; font-weight:700; padding:2px 6px; border-radius:99px; margin-left:2px;
       }
@@ -130,15 +134,15 @@
 
       /* Check group */
       .check-group {
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); border-radius:10px;
+        background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08); border-radius:10px;
         overflow:hidden; margin-bottom:10px;
       }
       .check-group-head {
         display:flex; align-items:center; gap:10px; padding:12px 14px;
-        border-bottom:1px solid rgba(255,255,255,.06); font-size:12px; font-weight:700; color:#ddd;
+        border-bottom:1px solid rgba(255,255,255,.06); font-size:12px; font-weight:700; color:var(--text);
       }
-      .check-group-head i { font-size:14px; color:rgba(255,255,255,.35); }
-      .check-group-head .engine { margin-left:auto; font-size:9px; font-weight:600; color:rgba(255,255,255,.25); letter-spacing:.06em; text-transform:uppercase; }
+      .check-group-head i { font-size:14px; color:var(--muted); }
+      .check-group-head .engine { margin-left:auto; font-size:9px; font-weight:600; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
 
       .check-rows { padding:0; }
       .check-row {
@@ -146,28 +150,28 @@
         padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04); font-size:12px;
       }
       .check-row:last-child { border-bottom:none; }
-      .check-name { color:rgba(255,255,255,.75); }
+      .check-name { color:var(--card-text); }
       .check-state {
         font-size:9px; font-weight:700; border-radius:999px; padding:3px 8px; text-align:center;
       }
       .cs-pass { color:#34d399; border:1px solid rgba(52,211,153,.3); }
       .cs-warn { color:#fbbf24; border:1px solid rgba(251,191,36,.3); }
       .cs-fail { color:#f87171; border:1px solid rgba(248,113,113,.3); }
-      .check-detail { font-size:10px; color:rgba(255,255,255,.3); text-align:right; }
+      .check-detail { font-size:10px; color:var(--muted); text-align:right; }
 
       /* Market feedback */
       .feedback-card {
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); border-radius:10px;
+        background:var(--panel,#1c1e26); border:1px solid rgba(255,255,255,.08); border-radius:10px;
         padding:14px 16px; flex-shrink:0;
       }
       .feedback-head { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
       .feedback-head i { color:#a78bfa; font-size:16px; }
-      .feedback-head span { font-size:12px; font-weight:700; color:#ddd; }
-      .feedback-head .mkt-tag { margin-left:auto; font-size:9px; font-weight:700; color:rgba(255,255,255,.3); letter-spacing:.06em; text-transform:uppercase; }
+      .feedback-head span { font-size:12px; font-weight:700; color:var(--text); }
+      .feedback-head .mkt-tag { margin-left:auto; font-size:9px; font-weight:700; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
 
       .feedback-item {
         display:flex; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04);
-        font-size:11px; color:rgba(255,255,255,.55); line-height:1.5;
+        font-size:11px; color:var(--card-text); line-height:1.5;
       }
       .feedback-item:last-child { border-bottom:none; }
       .fb-icon { flex-shrink:0; width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; }
@@ -180,7 +184,7 @@
       @keyframes pulse { from{opacity:.4} to{opacity:1} }
 
       .active-app { color:#f3f5fb; font-weight:600; }
-      .active-app .ico { color:#ede500; }
+      .active-app .ico { color:var(--yellow); }
 
       @media (max-width:900px) {
         .guardian-shell { grid-template-columns:1fr; overflow-y:auto; }
@@ -452,19 +456,65 @@
       }
       marketSelect.addEventListener('change', renderFeedback);
 
-      /* ─── Run check animation ─── */
+      /* ─── Run check with LLM ─── */
       const runBtn = document.getElementById('runBtn');
-      runBtn.addEventListener('click', () => {
+      runBtn.addEventListener('click', async () => {
         runBtn.disabled = true;
         runBtn.innerHTML = '<i class="bi bi-hourglass-split" style="margin-right:6px;"></i>Analysing asset...';
         document.getElementById('scoreBar').classList.add('analyzing');
 
-        setTimeout(() => {
-          runBtn.disabled = false;
-          runBtn.innerHTML = '<i class="bi bi-shield-check" style="margin-right:6px;"></i>Run Brand Check';
-          document.getElementById('scoreBar').classList.remove('analyzing');
-          renderFeedback();
-        }, 1800);
+        const market = marketSelect.options[marketSelect.selectedIndex].textContent;
+        const assetType = document.getElementById('assetType').value;
+
+        try {
+          const output = await LLM.call({
+            prompt: 'Analyse a Lotus Cars "' + assetType + '" asset for brand compliance in the ' + market + ' market.\n\n'
+              + 'The asset is a hero image of the Lotus Emeya electric grand tourer, 2400×1350 pixels.\n'
+              + 'It has the Lotus logo in the top-left corner, a headline in Lotus Type Sans, and a "Discover" CTA button.\n\n'
+              + 'Return a JSON object with:\n'
+              + '{\n'
+              + '  "score": 85-98 (integer),\n'
+              + '  "feedback": [\n'
+              + '    {"type": "warn|fail|info", "text": "specific compliance feedback for this market"}\n'
+              + '  ]\n'
+              + '}\n\n'
+              + 'Include 3-5 feedback items specific to ' + market + ' market regulations and cultural considerations.\n'
+              + 'Consider: advertising regulations, language requirements, EU/local disclaimers, cultural adaptation needs.\n'
+              + 'Return ONLY valid JSON, no markdown fences.',
+            system: 'You are a brand compliance expert for Lotus Cars. You know EU and local automotive advertising regulations. Always respond with valid JSON only.',
+            max_tokens: 1024,
+            temperature: 0.5
+          });
+
+          var jsonStr = output.trim().replace(/^```json?\s*/i, '').replace(/\s*```$/i, '');
+          var result = JSON.parse(jsonStr);
+
+          // Update score
+          var score = Math.max(0, Math.min(100, result.score || 92));
+          document.getElementById('scoreVal').textContent = score;
+          document.getElementById('scoreRing').style.setProperty('--pct', score + '%');
+          var pill = document.getElementById('statusPill');
+          if (score >= 90) { pill.className = 'status-pill pill-pass'; pill.textContent = 'COMPLIANT'; }
+          else if (score >= 70) { pill.className = 'status-pill pill-warn'; pill.textContent = 'REVIEW'; }
+          else { pill.className = 'status-pill pill-fail'; pill.textContent = 'NON-COMPLIANT'; }
+
+          // Update feedback
+          if (result.feedback && result.feedback.length) {
+            const iconMap = {warn:'exclamation', fail:'x-lg', info:'info'};
+            feedbackList.innerHTML = result.feedback.map(function(f) {
+              var t = f.type || 'info';
+              return '<div class="feedback-item"><div class="fb-icon fb-' + t + '"><i class="bi bi-' + (iconMap[t]||'info') + '"></i></div><div>' + f.text + '</div></div>';
+            }).join('');
+            mktTag.textContent = market;
+          }
+        } catch (err) {
+          console.error('Brand check error:', err);
+          renderFeedback(); // Fallback to static data
+        }
+
+        document.getElementById('scoreBar').classList.remove('analyzing');
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<i class="bi bi-shield-check" style="margin-right:6px;"></i>Run Brand Check';
       });
 
       /* ─── Sidebar nav ─── */
@@ -587,7 +637,7 @@
               + '<p class="sp-name">Cliff Allison</p>'
               + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
               + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
-              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '<p style="margin-top:16px;font-size:11px;color:var(--muted)">This will end your session across all Brand Kitchen tools.</p>'
               + '</div>'
         }
       };
