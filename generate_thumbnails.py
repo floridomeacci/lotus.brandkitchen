@@ -15,6 +15,7 @@ PROMPTS = {
     "asset-scaler": "high-end automotive key visual shown across many devices and ad formats, phone tablet laptop outdoor billboard, precise scaling workflow, dark premium desk scene with yellow accents, photoreal, cinematic, no text, no logos",
     "brand-guardian": "luxury automotive brand guardian concept, strategist silhouette observing multiple moodboards and compliance overlays, moody dark environment, selective yellow highlights, refined and minimal, photoreal, no text, no logos",
     "briefing-agent": "creative briefing agent scene, premium workspace with voice assistant waveform hologram and campaign notes, automotive visuals on screens, calm cinematic lighting, dark background with subtle yellow accents, photoreal, no text, no logos",
+    "iab-bannerset": "IAB display banner production line, multiple ad formats and sizes floating in dark premium 3D space, leaderboard skyscraper rectangle button banners with automotive visuals, intelligent auto-layout grid, yellow accent highlights, cinematic depth of field, photoreal, no text, no logos",
     "edges": "futuristic yellow sports car in dramatic low-light studio, sharp body lines and reflective surfaces, premium automotive advertising style, cinematic contrast, dark scene, photoreal, no text, no logos",
 }
 
