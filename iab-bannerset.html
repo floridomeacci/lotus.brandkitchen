@@ -425,7 +425,7 @@
       const vgSrc = sessionStorage.getItem('vg-hero-image');
       if (vgSrc) {
         sessionStorage.removeItem('vg-hero-image');
-        loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
+        /* Skip default image — VG image will be loaded after heroSlot is declared */
       } else {
         loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
       }
