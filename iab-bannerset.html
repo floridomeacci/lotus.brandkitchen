@@ -113,8 +113,10 @@
         text-shadow:0 1px 4px rgba(0,0,0,.6);
       }
       .b-overlay .b-logo-mark {
-        font-size:10px; font-weight:800; color:#fff; letter-spacing:.08em;
-        text-shadow:0 1px 4px rgba(0,0,0,.6); text-transform:uppercase; flex-shrink:0;
+        flex-shrink:0; filter:brightness(0) invert(1); drop-shadow(0 1px 3px rgba(0,0,0,.5));
+      }
+      .b-overlay .b-logo-mark img {
+        display:block; height:100%; width:auto;
       }
       .b-overlay .b-bottom { display:flex; align-items:flex-end; justify-content:flex-end; }
       .b-overlay .b-cta {
@@ -346,11 +348,11 @@
 
         iabSizes.forEach(size => {
           const canvas = document.createElement('canvas');
-          canvas.width = size.w; canvas.height = size.h;
+          canvas.width = size.w * 2; canvas.height = size.h * 2;
           const ctx = canvas.getContext('2d');
           ctx.fillStyle = '#0e1219';
-          ctx.fillRect(0, 0, size.w, size.h);
-          if (src) drawCover(ctx, src, size.w, size.h);
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          if (src) drawCover(ctx, src, canvas.width, canvas.height);
           const dataUrl = canvas.toDataURL('image/png');
 
           const isSky = (size.w === 120 && size.h === 600);
@@ -359,7 +361,7 @@
           const subSize = Math.max(7, headSize * 0.5);
           const ctaSize = Math.max(6, Math.min(9, size.h * 0.08)) * mult;
           const ctaPad = Math.max(2, ctaSize * 0.35);
-          const logoSize = Math.max(7, Math.min(12, size.h * 0.1)) * mult;
+          const logoH = Math.max(10, Math.min(20, size.h * 0.15)) * mult;
           const isLeader = (size.w === 728 && size.h === 90);
 
           const card = document.createElement('article');
@@ -373,7 +375,7 @@
                     <div class="b-heading" style="font-size:${headSize}px;">${heading}</div>
                     ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${sub}</div>` : ''}
                   </div>
-                  <div class="b-logo-mark" style="font-size:${logoSize}px;">LOTUS</div>
+                  <div class="b-logo-mark" style="height:${logoH}px;"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>
                 </div>
                 <div class="b-bottom">
                   ${cta ? `<a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2.5}px;">${cta}</a>` : ''}
