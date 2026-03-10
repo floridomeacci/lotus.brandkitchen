@@ -113,7 +113,7 @@
         text-shadow:0 1px 4px rgba(0,0,0,.6);
       }
       .b-overlay .b-logo-mark {
-        flex-shrink:0; filter:brightness(0) invert(1); drop-shadow(0 1px 3px rgba(0,0,0,.5));
+        flex-shrink:0;
       }
       .b-overlay .b-logo-mark img {
         display:block; height:100%; width:auto;
@@ -366,7 +366,7 @@
           const subSize = Math.max(7, headSize * 0.5);
           const ctaSize = Math.max(6, Math.min(9, size.h * 0.08)) * mult;
           const ctaPad = Math.max(2, ctaSize * 0.35);
-          const logoH = Math.max(10, Math.min(20, size.h * 0.15)) * mult;
+          const logoH = Math.max(14, Math.min(28, size.h * 0.2)) * mult;
           const isLeader = (size.w === 728 && size.h === 90);
 
           const card = document.createElement('article');
@@ -441,8 +441,28 @@
         }, 2000);
       });
 
-      /* ─── Upload slot interaction ─── */
-      document.querySelectorAll('.upload-slot').forEach(slot => {
+      /* ─── Upload slot interaction — Hero Image uses a real file input ─── */
+      const heroFileInput = document.createElement('input');
+      heroFileInput.type = 'file';
+      heroFileInput.accept = 'image/*';
+      heroFileInput.style.display = 'none';
+      document.body.appendChild(heroFileInput);
+
+      const heroSlot = document.getElementById('heroSlot');
+      heroSlot.addEventListener('click', () => heroFileInput.click());
+      heroFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        heroSlot.classList.add('has-file');
+        heroSlot.innerHTML = '<i class="bi bi-check-circle"></i>' + file.name;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          loadImage(ev.target.result).then(img => renderBanners(img));
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.querySelectorAll('.upload-slot:not(#heroSlot)').forEach(slot => {
         slot.addEventListener('click', () => {
           if (!slot.classList.contains('has-file')) {
             slot.classList.add('has-file');

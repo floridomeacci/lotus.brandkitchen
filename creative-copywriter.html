@@ -34,7 +34,8 @@
         width:30px; height:30px; border-radius:50%; flex-shrink:0;
         display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
       }
-      .msg-ai .msg-avatar { background:rgba(237,229,0,.15); color:#ede500; }
+      .msg-ai .msg-avatar { background:transparent; padding:2px; }
+      .msg-ai .msg-avatar img { width:100%; height:100%; object-fit:contain; }
       .msg-user .msg-avatar { background:rgba(255,255,255,.08); color:rgba(255,255,255,.5); }
 
       .msg-bubble { border-radius:14px; padding:12px 16px; font-size:13.5px; line-height:1.6; }
@@ -149,7 +150,7 @@
           <div class="chat-area" id="chatArea">
             <!-- Welcome -->
             <div class="msg msg-ai">
-              <div class="msg-avatar"><i class="bi bi-pen"></i></div>
+              <div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>
               <div class="msg-bubble">
                 <h4>Creative Copywriter</h4>
                 <p>I'm your AI copywriting assistant, powered by RAG with access to Lotus brand guidelines, product knowledge, and market intelligence.</p>
@@ -167,7 +168,7 @@
 
             <!-- Demo: competitor analysis -->
             <div class="msg msg-ai">
-              <div class="msg-avatar"><i class="bi bi-pen"></i></div>
+              <div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>
               <div class="msg-bubble">
                 <h4>Competitor Analysis</h4>
                 <p>Analysed positioning of Porsche Taycan, BMW i7, and Mercedes EQS in the German market. Key differentiator: Lotus Emeya's motorsport-derived chassis dynamics — none of the competitors lead with track heritage in their GT messaging.</p>
@@ -178,7 +179,7 @@
 
             <!-- Demo: headlines -->
             <div class="msg msg-ai">
-              <div class="msg-avatar"><i class="bi bi-pen"></i></div>
+              <div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>
               <div class="msg-bubble">
                 <h4>Headlines — German Market</h4>
                 <ul>
@@ -204,7 +205,7 @@
             </div>
 
             <div class="msg msg-ai">
-              <div class="msg-avatar"><i class="bi bi-pen"></i></div>
+              <div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div>
               <div class="msg-bubble">
                 <h4>Refined Headline</h4>
                 <p><strong>RENNSTRECKE TRIFFT STRASSE. EMEYA.</strong></p>
@@ -281,7 +282,7 @@
         // Typing indicator
         var typingDiv = document.createElement('div');
         typingDiv.className = 'msg msg-ai';
-        typingDiv.innerHTML = '<div class="msg-avatar"><i class="bi bi-pen"></i></div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
+        typingDiv.innerHTML = '<div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
         chatArea.appendChild(typingDiv);
         chatArea.scrollTop = chatArea.scrollHeight;
 
@@ -291,7 +292,7 @@
           msg.className = 'msg msg-ai';
           var sources = r.sources.map(function(s) { return '<span class="source-tag">' + s + '</span>'; }).join('');
           var listHtml = r.list ? '<ul>' + r.list.map(function(l) { return '<li>' + l + '</li>'; }).join('') + '</ul>' : '';
-          msg.innerHTML = '<div class="msg-avatar"><i class="bi bi-pen"></i></div><div class="msg-bubble"><h4>' + r.heading + '</h4><p>' + r.body + '</p>' + listHtml + sources + '</div>';
+          msg.innerHTML = '<div class="msg-avatar"><img src="./Lotus_Cars_logo.svg.png" alt="Lotus" /></div><div class="msg-bubble"><h4>' + r.heading + '</h4><p>' + r.body + '</p>' + listHtml + sources + '</div>';
           chatArea.appendChild(msg);
           chatArea.scrollTop = chatArea.scrollHeight;
           sendBtn.disabled = false;

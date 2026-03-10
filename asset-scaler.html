@@ -103,6 +103,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         background: #0e1219;
         margin-bottom: 12px;
+        position: relative;
       }
 
       .input-preview img {
@@ -110,6 +111,34 @@
         height: 100%;
         object-fit: cover;
         display: block;
+      }
+
+      .upload-zone {
+        width: 100%;
+        height: 100%;
+        border: 2px dashed rgba(255,255,255,0.18);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        gap: 6px;
+        color: #8f98aa;
+        font-size: 12px;
+        transition: border-color .2s;
+      }
+      .upload-zone:hover { border-color: #ede500; color: #cdd3e0; }
+      .upload-zone i { font-size: 28px; }
+
+      .placeholder-box {
+        width: 100%;
+        background: #0e1219;
+        display: grid;
+        place-items: center;
+        color: #555d6e;
+        font-size: 11px;
+        letter-spacing: .04em;
       }
 
       .input-meta {
@@ -283,9 +312,14 @@
               <div class="input-head">
                 <h2>INPUT IMAGE</h2>
               </div>
+            <input type="file" id="heroFileInput" accept="image/*" hidden />
             <article class="format-card input-card">
-              <div class="input-preview">
-                <img id="inputPreview" alt="Input preview" />
+              <div class="input-preview" id="inputPreviewWrap">
+                <div class="upload-zone" id="uploadZone">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                  <span>Click or drop image</span>
+                </div>
+                <img id="inputPreview" alt="Input preview" style="display:none;" />
               </div>
               <div class="format-meta">
                 <h3>Input Thumbnail</h3>
@@ -293,7 +327,7 @@
               </div>
             </article>
             <div class="input-meta" id="inputMeta">
-              Loaded demo source
+              Upload an image to generate all output formats.
             </div>
           </aside>
 
@@ -325,9 +359,10 @@
       const formatsGrid = document.getElementById("formatsGrid");
       const inputPreview = document.getElementById("inputPreview");
       const inputMeta = document.getElementById("inputMeta");
-  const downloadAllBtn = document.getElementById("downloadAllBtn");
-      const defaultImage = "./assets/generated/asset-scaler.png";
-  let generatedOutputs = [];
+      const downloadAllBtn = document.getElementById("downloadAllBtn");
+      const uploadZone = document.getElementById("uploadZone");
+      const heroFileInput = document.getElementById("heroFileInput");
+      let generatedOutputs = [];
 
       function ratioLabel(width, height) {
         const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
@@ -338,11 +373,7 @@
       function drawCover(ctx, img, targetWidth, targetHeight) {
         const sourceRatio = img.width / img.height;
         const targetRatio = targetWidth / targetHeight;
-        let drawWidth;
-        let drawHeight;
-        let offsetX = 0;
-        let offsetY = 0;
-
+        let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
         if (sourceRatio > targetRatio) {
           drawHeight = targetHeight;
           drawWidth = drawHeight * sourceRatio;
@@ -352,51 +383,58 @@
           drawHeight = drawWidth / sourceRatio;
           offsetY = (targetHeight - drawHeight) / 2;
         }
-
         ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      }
+
+      function renderPlaceholders() {
+        formatsGrid.innerHTML = "";
+        FORMATS.forEach(function (format) {
+          var card = document.createElement("article");
+          card.className = "format-card";
+          card.innerHTML =
+            '<div class="placeholder-box" style="aspect-ratio:' + format.width + '/' + format.height + ';">' +
+            '<span>' + format.width + ' × ' + format.height + '</span></div>' +
+            '<div class="format-meta"><h3>' + format.name + '</h3>' +
+            '<p>' + format.width + ' × ' + format.height + ' · Ratio ' + ratioLabel(format.width, format.height) + '</p></div>';
+          formatsGrid.appendChild(card);
+        });
       }
 
       function renderFormats(img) {
         formatsGrid.innerHTML = "";
+        uploadZone.style.display = "none";
+        inputPreview.style.display = "block";
         inputPreview.src = img.src;
-        inputMeta.textContent = `Source: ${img.width} × ${img.height} · Ratio ${ratioLabel(img.width, img.height)}`;
+        inputMeta.textContent = "Source: " + img.width + " × " + img.height + " · Ratio " + ratioLabel(img.width, img.height);
         generatedOutputs = [];
 
-        FORMATS.forEach((format) => {
-          const canvas = document.createElement("canvas");
+        FORMATS.forEach(function (format) {
+          var canvas = document.createElement("canvas");
           canvas.width = format.width;
           canvas.height = format.height;
-          const ctx = canvas.getContext("2d");
+          var ctx = canvas.getContext("2d");
           ctx.fillStyle = "#0e1219";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           drawCover(ctx, img, canvas.width, canvas.height);
 
-          const outputDataUrl = canvas.toDataURL("image/png");
-          generatedOutputs.push({
-            fileName: `${format.key}.png`,
-            dataUrl: outputDataUrl,
-          });
-          const card = document.createElement("article");
+          var outputDataUrl = canvas.toDataURL("image/png");
+          generatedOutputs.push({ fileName: format.key + ".png", dataUrl: outputDataUrl });
+
+          var card = document.createElement("article");
           card.className = "format-card";
-
-          card.innerHTML = `
-            <div class="preview-box" style="aspect-ratio:${format.width}/${format.height};">
-              <img src="${outputDataUrl}" alt="${format.name} output" />
-            </div>
-            <div class="format-meta">
-              <h3>${format.name}</h3>
-              <p>${format.width} × ${format.height} · Ratio ${ratioLabel(format.width, format.height)}</p>
-            </div>
-          `;
-
+          card.innerHTML =
+            '<div class="preview-box" style="aspect-ratio:' + format.width + '/' + format.height + ';">' +
+            '<img src="' + outputDataUrl + '" alt="' + format.name + ' output" /></div>' +
+            '<div class="format-meta"><h3>' + format.name + '</h3>' +
+            '<p>' + format.width + ' × ' + format.height + ' · Ratio ' + ratioLabel(format.width, format.height) + '</p></div>';
           formatsGrid.appendChild(card);
         });
       }
 
       function downloadAllSizes() {
-        generatedOutputs.forEach((output, index) => {
-          setTimeout(() => {
-            const link = document.createElement("a");
+        generatedOutputs.forEach(function (output, index) {
+          setTimeout(function () {
+            var link = document.createElement("a");
             link.href = output.dataUrl;
             link.download = output.fileName;
             document.body.appendChild(link);
@@ -407,37 +445,40 @@
       }
 
       function loadImage(src) {
-        return new Promise((resolve, reject) => {
-          const image = new Image();
-          image.onload = () => resolve(image);
+        return new Promise(function (resolve, reject) {
+          var image = new Image();
+          image.onload = function () { resolve(image); };
           image.onerror = reject;
           image.src = src;
         });
       }
 
-      downloadAllBtn.addEventListener("click", downloadAllSizes);
-
-      document.querySelectorAll('.app-nav-item[data-href]').forEach((item) => {
-        const go = () => {
-          const href = item.getAttribute('data-href');
-          if (href) window.location.href = href;
-        };
-
-        item.addEventListener('click', go);
-        item.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            go();
-          }
-        });
+      /* Upload zone interactions */
+      uploadZone.addEventListener("click", function () { heroFileInput.click(); });
+      uploadZone.addEventListener("dragover", function (e) { e.preventDefault(); uploadZone.style.borderColor = "#ede500"; });
+      uploadZone.addEventListener("dragleave", function () { uploadZone.style.borderColor = ""; });
+      uploadZone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        uploadZone.style.borderColor = "";
+        var file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) handleFile(file);
+      });
+      heroFileInput.addEventListener("change", function () {
+        if (heroFileInput.files[0]) handleFile(heroFileInput.files[0]);
       });
 
-      loadImage(defaultImage)
-        .then((image) => renderFormats(image))
-        .catch(() => {
-          inputMeta.textContent = "Default image missing. Upload an image.";
-          formatsGrid.innerHTML = `<p style="color:#aeb5c3; font-size:13px;">Default demo image not found. Upload an image to generate all output formats.</p>`;
-        });
+      function handleFile(file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          loadImage(e.target.result).then(renderFormats);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      downloadAllBtn.addEventListener("click", downloadAllSizes);
+
+      /* Show placeholder cards on load */
+      renderPlaceholders();
     </script>
   </body>
 </html>
