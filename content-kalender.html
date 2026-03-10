@@ -265,12 +265,12 @@
         <div class="menu-group">
           <span class="menu-label">USER DETAILS</span>
           <ul>
-            <li><i class="ico bi bi-person"></i><span>Profile</span></li>
-            <li><i class="ico bi bi-people"></i><span>Users &amp; Groups</span></li>
-            <li><i class="ico bi bi-grid"></i><span>Manage Apps</span></li>
-            <li><i class="ico bi bi-columns-gap"></i><span>Manage Tenants</span></li>
-            <li><i class="ico bi bi-bell"></i><span>Notifications</span></li>
-            <li><i class="ico bi bi-box-arrow-right"></i><span>Log Out</span></li>
+            <li data-panel="profile"><i class="ico bi bi-person"></i><span>Profile</span></li>
+            <li data-panel="users"><i class="ico bi bi-people"></i><span>Users &amp; Groups</span></li>
+            <li data-panel="apps"><i class="ico bi bi-grid"></i><span>Manage Apps</span></li>
+            <li data-panel="tenants"><i class="ico bi bi-columns-gap"></i><span>Manage Tenants</span></li>
+            <li data-panel="notifications"><i class="ico bi bi-bell"></i><span>Notifications</span></li>
+            <li data-panel="logout"><i class="ico bi bi-box-arrow-right"></i><span>Log Out</span></li>
           </ul>
         </div>
 
@@ -503,6 +503,151 @@
         item.addEventListener('click', go);
         item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
       });
+    </script>
+
+    <!-- Side panel overlay -->
+    <div class="side-panel-overlay" id="spOverlay"></div>
+    <div class="side-panel" id="sidePanel">
+      <div class="side-panel-head">
+        <h2 id="spTitle">Profile</h2>
+        <button class="side-panel-close" id="spClose"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="side-panel-body" id="spBody"></div>
+    </div>
+
+    <script>
+    (function(){
+      var panels = {
+        profile: {
+          title: 'Profile',
+          html: '<div class="sp-avatar-lg">CA</div>'
+              + '<p class="sp-name">Cliff Allison</p>'
+              + '<p class="sp-role">Brand Manager · Lotus Cars</p>'
+              + '<div class="sp-section"><h3>Account Details</h3>'
+              + '<div class="sp-field"><span class="sp-label">Email</span><span class="sp-val">c.allison@lotuscars.com</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Phone</span><span class="sp-val">+44 1onal 953 608</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Department</span><span class="sp-val">Global Marketing</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Location</span><span class="sp-val">Hethel, Norfolk, UK</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Joined</span><span class="sp-val">14 Jan 2024</span></div>'
+              + '</div>'
+              + '<div class="sp-section"><h3>Preferences</h3>'
+              + '<div class="sp-toggle"><span>Dark Mode</span><span class="sp-toggle-dot"></span></div>'
+              + '<div class="sp-toggle"><span>Email Notifications</span><span class="sp-toggle-dot"></span></div>'
+              + '<div class="sp-toggle"><span>2FA Enabled</span><span class="sp-toggle-dot"></span></div>'
+              + '<div class="sp-toggle"><span>API Access</span><span class="sp-toggle-dot off"></span></div>'
+              + '</div>'
+        },
+        users: {
+          title: 'Users & Groups',
+          html: '<div class="sp-section"><h3>Team Members · 6</h3>'
+              + '<div class="sp-user-row"><div class="sp-user-av">CA</div><div class="sp-user-info">Cliff Allison<br><small>c.allison@lotuscars.com</small></div><span class="sp-user-role">Admin</span></div>'
+              + '<div class="sp-user-row"><div class="sp-user-av">SH</div><div class="sp-user-info">Sarah Hughes<br><small>s.hughes@lotuscars.com</small></div><span class="sp-user-role">Editor</span></div>'
+              + '<div class="sp-user-row"><div class="sp-user-av">MK</div><div class="sp-user-info">Marcus Klein<br><small>m.klein@lotuscars.com</small></div><span class="sp-user-role">Editor</span></div>'
+              + '<div class="sp-user-row"><div class="sp-user-av">LP</div><div class="sp-user-info">Lena Petrov<br><small>l.petrov@lotuscars.com</small></div><span class="sp-user-role">Viewer</span></div>'
+              + '<div class="sp-user-row"><div class="sp-user-av">JR</div><div class="sp-user-info">James Rivera<br><small>j.rivera@omc.com</small></div><span class="sp-user-role">Editor</span></div>'
+              + '<div class="sp-user-row"><div class="sp-user-av">AT</div><div class="sp-user-info">Anna Torres<br><small>a.torres@omc.com</small></div><span class="sp-user-role">Viewer</span></div>'
+              + '</div>'
+              + '<div class="sp-section"><h3>Groups</h3>'
+              + '<div class="sp-field"><span class="sp-label">Brand Team</span><span class="sp-val">4 members</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Agency Partners</span><span class="sp-val">2 members</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Stakeholders</span><span class="sp-val">8 members</span></div>'
+              + '</div>'
+        },
+        apps: {
+          title: 'Manage Apps',
+          html: '<div class="sp-section"><h3>Installed Apps · 8</h3>'
+              + '<div class="sp-card-grid">'
+              + '<div class="sp-card"><i class="bi bi-calendar3"></i><p class="sp-card-val">Active</p><p>Content Planner</p></div>'
+              + '<div class="sp-card"><i class="bi bi-bounding-box"></i><p class="sp-card-val">Active</p><p>Asset Scaler</p></div>'
+              + '<div class="sp-card"><i class="bi bi-shield-check"></i><p class="sp-card-val">Active</p><p>Brand Guardian</p></div>'
+              + '<div class="sp-card"><i class="bi bi-megaphone"></i><p class="sp-card-val">Active</p><p>Briefing Agent</p></div>'
+              + '<div class="sp-card"><i class="bi bi-bezier2"></i><p class="sp-card-val">Active</p><p>Visual Generator</p></div>'
+              + '<div class="sp-card"><i class="bi bi-grid-3x3-gap"></i><p class="sp-card-val">Active</p><p>IAB Bannerset</p></div>'
+              + '<div class="sp-card"><i class="bi bi-pen"></i><p class="sp-card-val">Active</p><p>Copywriter</p></div>'
+              + '<div class="sp-card"><i class="bi bi-bar-chart-line"></i><p class="sp-card-val">Active</p><p>Data Dashboard</p></div>'
+              + '</div></div>'
+              + '<div class="sp-section"><h3>Usage This Month</h3>'
+              + '<div class="sp-field"><span class="sp-label">API Calls</span><span class="sp-val">12,847</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Storage Used</span><span class="sp-val">2.4 GB / 10 GB</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Active Users</span><span class="sp-val">6</span></div>'
+              + '</div>'
+        },
+        tenants: {
+          title: 'Manage Tenants',
+          html: '<div class="sp-section"><h3>Current Tenant</h3>'
+              + '<div class="sp-field"><span class="sp-label">Name</span><span class="sp-val">Lotus Cars</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Plan</span><span class="sp-val">Enterprise</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Region</span><span class="sp-val">EU West</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Tenant ID</span><span class="sp-val">LTS-EU-0042</span></div>'
+              + '</div>'
+              + '<div class="sp-section"><h3>Connected Markets</h3>'
+              + '<div class="sp-field"><span class="sp-label">Germany</span><span class="sp-val">Active</span></div>'
+              + '<div class="sp-field"><span class="sp-label">United Kingdom</span><span class="sp-val">Active</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Italy</span><span class="sp-val">Active</span></div>'
+              + '<div class="sp-field"><span class="sp-label">France</span><span class="sp-val">Pending</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Netherlands</span><span class="sp-val">Active</span></div>'
+              + '</div>'
+              + '<div class="sp-section"><h3>Billing</h3>'
+              + '<div class="sp-field"><span class="sp-label">Monthly</span><span class="sp-val">\u20ac4,200</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Next Invoice</span><span class="sp-val">1 Apr 2026</span></div>'
+              + '<div class="sp-field"><span class="sp-label">Payment</span><span class="sp-val">VISA •••4819</span></div>'
+              + '</div>'
+        },
+        notifications: {
+          title: 'Notifications',
+          html: '<div class="sp-section"><h3>Recent · 7</h3>'
+              + '<div class="sp-notif"><i class="bi bi-check-circle"></i><span>Brand Guardian approved <strong>Emira V6 hero</strong></span><span class="sp-notif-time">2m ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-pencil-square"></i><span>Sarah edited <strong>Q2 Content Calendar</strong></span><span class="sp-notif-time">14m ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-cloud-arrow-up"></i><span>Marcus uploaded <strong>3 new assets</strong></span><span class="sp-notif-time">1h ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-megaphone"></i><span>New brief created: <strong>Emeya Summer</strong></span><span class="sp-notif-time">2h ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-bar-chart-line"></i><span>Dashboard report <strong>ready for review</strong></span><span class="sp-notif-time">3h ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-person-plus"></i><span>Anna Torres <strong>joined the team</strong></span><span class="sp-notif-time">1d ago</span></div>'
+              + '<div class="sp-notif"><i class="bi bi-shield-check"></i><span>Brand guidelines <strong>updated to v3.2</strong></span><span class="sp-notif-time">2d ago</span></div>'
+              + '</div>'
+              + '<div class="sp-section"><h3>Settings</h3>'
+              + '<div class="sp-toggle"><span>Push Notifications</span><span class="sp-toggle-dot"></span></div>'
+              + '<div class="sp-toggle"><span>Email Digest</span><span class="sp-toggle-dot"></span></div>'
+              + '<div class="sp-toggle"><span>Slack Integration</span><span class="sp-toggle-dot off"></span></div>'
+              + '</div>'
+        },
+        logout: {
+          title: 'Log Out',
+          html: '<div style="text-align:center;padding:40px 0">'
+              + '<div class="sp-avatar-lg">CA</div>'
+              + '<p class="sp-name">Cliff Allison</p>'
+              + '<p class="sp-role" style="margin-bottom:24px">You are currently signed in</p>'
+              + '<button style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#ef4444;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Sign Out</button>'
+              + '<p style="margin-top:16px;font-size:11px;color:#6b7280">This will end your session across all Brand Kitchen tools.</p>'
+              + '</div>'
+        }
+      };
+
+      var overlay = document.getElementById('spOverlay');
+      var panel = document.getElementById('sidePanel');
+      var spTitle = document.getElementById('spTitle');
+      var spBody = document.getElementById('spBody');
+      var spClose = document.getElementById('spClose');
+
+      function openPanel(key) {
+        var p = panels[key];
+        if (!p) return;
+        spTitle.textContent = p.title;
+        spBody.innerHTML = p.html;
+        overlay.classList.add('open');
+        panel.classList.add('open');
+      }
+      function closePanel() {
+        overlay.classList.remove('open');
+        panel.classList.remove('open');
+      }
+      overlay.addEventListener('click', closePanel);
+      spClose.addEventListener('click', closePanel);
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePanel(); });
+
+      document.querySelectorAll('[data-panel]').forEach(function(el) {
+        el.addEventListener('click', function() { openPanel(el.getAttribute('data-panel')); });
+      });
+    })();
     </script>
   </body>
 </html>
