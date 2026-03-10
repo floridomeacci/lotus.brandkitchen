@@ -97,6 +97,22 @@
       }
       .preview-box img { width:100%; height:100%; object-fit:cover; display:block; }
 
+      /* Banner text overlay */
+      .b-overlay {
+        position:absolute; inset:0; z-index:3; display:flex; flex-direction:column;
+        justify-content:center; padding:8% 6%; pointer-events:none;
+      }
+      .b-overlay.b-wide { flex-direction:row; align-items:center; gap:8px; }
+      .b-overlay .b-heading { margin:0; color:#fff; font-weight:800; line-height:1.15; text-shadow:0 1px 4px rgba(0,0,0,.6); }
+      .b-overlay .b-sub { margin:4px 0 0; color:rgba(255,255,255,.8); font-weight:400; text-shadow:0 1px 3px rgba(0,0,0,.5); }
+      .b-overlay.b-wide .b-sub { margin:0; white-space:nowrap; }
+      .b-overlay .b-cta {
+        display:inline-block; margin-top:6px; padding:4px 10px; border-radius:4px;
+        background:var(--yellow,#fff200); color:#1a1a1a; font-weight:700; text-decoration:none;
+        pointer-events:auto;
+      }
+      .b-overlay.b-wide .b-cta { margin-top:0; white-space:nowrap; }
+
       .format-meta { padding:10px 12px; display:flex; align-items:center; justify-content:space-between; }
       .format-meta div h3 { margin:0; font-size:13px; color:#eef2f8; }
       .format-meta div p { margin:4px 0 0; font-size:11px; color:#8f98aa; }
@@ -285,7 +301,7 @@
       ];
 
       const grid = document.getElementById('bannersGrid');
-      const defaultImage = './assets/generated/brand-guardian.png';
+      const defaultImage = './assets/generated/iab-bannerset.png';
 
       function ratioLabel(w, h) {
         const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
@@ -312,11 +328,27 @@
           if (img) drawCover(ctx, img, size.w, size.h);
           const dataUrl = canvas.toDataURL('image/png');
 
+          const aspect = size.w / size.h;
+          const isWide = aspect > 3;
+          const headSize = Math.max(8, Math.min(18, (size.h * 0.18)));
+          const subSize = Math.max(6, headSize * 0.6);
+          const ctaSize = Math.max(6, headSize * 0.5);
+          const ctaPad = Math.max(2, ctaSize * 0.4);
+
+          const heading = document.getElementById('headingInput').value || 'The New Emeya';
+          const sub = document.getElementById('subInput').value || '';
+          const cta = document.getElementById('ctaInput').value || '';
+
           const card = document.createElement('article');
           card.className = 'format-card';
           card.innerHTML = `
             <div class="preview-box" style="aspect-ratio:${size.w}/${size.h};">
               <img src="${dataUrl}" alt="${size.name} output" />
+              <div class="b-overlay${isWide ? ' b-wide' : ''}">
+                <div class="b-heading" style="font-size:${headSize}px;${isWide ? 'white-space:nowrap;' : ''}">${heading}</div>
+                ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${isWide ? sub.split('.')[0] : sub}</div>` : ''}
+                ${cta ? `<a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2}px;">${cta}</a>` : ''}
+              </div>
               <div class="focus-dot" style="top:40%;left:62%;"></div>
               <div class="seg-overlay">
                 <span class="seg-label" style="top:4px;left:4px;">BG</span>
