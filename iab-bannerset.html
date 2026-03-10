@@ -125,8 +125,9 @@
         text-decoration:none; text-transform:uppercase; letter-spacing:.05em; pointer-events:auto;
       }
 
-      /* Leaderboard spans all columns */
-      .span-all { column-span:all; }
+      /* Leaderboard full-width above masonry */
+      #leaderboardSlot { margin-bottom:14px; }
+      #leaderboardSlot .format-card { margin:0; }
 
       .format-meta {
         padding:10px 12px; display:none; align-items:center; justify-content:space-between;
@@ -299,6 +300,7 @@
               <button class="download-all"><i class="bi bi-download" style="margin-right:4px;"></i>Download All</button>
             </div>
 
+            <div id="leaderboardSlot"></div>
             <div class="formats-masonry" id="bannersGrid"></div>
           </div>
         </section>
@@ -319,6 +321,7 @@
       ];
 
       const grid = document.getElementById('bannersGrid');
+      const leaderSlot = document.getElementById('leaderboardSlot');
       const defaultImage = './assets/generated/edges.png';
 
       function ratioLabel(w, h) {
@@ -341,6 +344,7 @@
         if (img) cachedImg = img;
         const src = cachedImg;
         grid.innerHTML = '';
+        leaderSlot.innerHTML = '';
 
         const heading = document.getElementById('headingInput').value || 'The New Emeya';
         const sub = document.getElementById('subInput').value || '';
@@ -365,7 +369,7 @@
           const isLeader = (size.w === 728 && size.h === 90);
 
           const card = document.createElement('article');
-          card.className = 'format-card' + (isLeader ? ' span-all' : '');
+          card.className = 'format-card';
           card.innerHTML = `
             <div class="preview-box" style="aspect-ratio:${size.w}/${size.h};">
               <img src="${dataUrl}" alt="${size.name} output" />
@@ -395,7 +399,11 @@
               <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
             </div>
           `;
-          grid.appendChild(card);
+          if (isLeader) {
+            leaderSlot.appendChild(card);
+          } else {
+            grid.appendChild(card);
+          }
         });
       }
 
