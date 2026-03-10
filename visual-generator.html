@@ -415,9 +415,22 @@
 
         /* Attach bannerset handoff listeners */
         outputGrid.querySelectorAll('.btn-bannerset').forEach(btn => {
-          btn.addEventListener('click', () => {
-            sessionStorage.setItem('vg-hero-image', btn.dataset.src);
-            window.location.href = './iab-bannerset.html';
+          btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i>Preparing…';
+            try {
+              const resp = await fetch(btn.dataset.src);
+              const blob = await resp.blob();
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                sessionStorage.setItem('vg-hero-image', reader.result);
+                window.location.href = './iab-bannerset.html';
+              };
+              reader.readAsDataURL(blob);
+            } catch (e) {
+              sessionStorage.setItem('vg-hero-image', btn.dataset.src);
+              window.location.href = './iab-bannerset.html';
+            }
           });
         });
 
