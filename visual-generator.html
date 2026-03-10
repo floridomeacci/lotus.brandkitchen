@@ -195,6 +195,32 @@
         color: var(--card-text);
       }
 
+      .out-actions {
+        padding: 0 10px 10px;
+        display: flex;
+        gap: 6px;
+      }
+
+      .btn-bannerset {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: inherit;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 242, 0, 0.3);
+        background: rgba(255, 242, 0, 0.08);
+        color: var(--yellow);
+        cursor: pointer;
+        transition: background 0.2s, border-color 0.2s;
+      }
+      .btn-bannerset:hover {
+        background: rgba(255, 242, 0, 0.15);
+        border-color: rgba(255, 242, 0, 0.5);
+      }
+
       .active-app {
         color: #f3f5fb;
         font-weight: 600;
@@ -376,9 +402,21 @@
               <h3>Variant ${idx + 1}</h3>
               <p>${escapeHTML(meta.style)} · ${escapeHTML(meta.market)} · ${escapeHTML(meta.objective)}</p>
             </div>
+            <div class="out-actions">
+              <button class="btn-bannerset" data-src="${src}"><i class="bi bi-grid-3x3-gap"></i>Use in Bannerset</button>
+            </div>
           `;
           outputGrid.appendChild(card);
         });
+
+        /* Attach bannerset handoff listeners */
+        outputGrid.querySelectorAll('.btn-bannerset').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sessionStorage.setItem('vg-hero-image', btn.dataset.src);
+            window.location.href = './iab-bannerset.html';
+          });
+        });
+
         variantInfo.textContent = `${images.length} generated image${images.length !== 1 ? 's' : ''}`;
       }
 

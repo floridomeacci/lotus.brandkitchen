@@ -423,6 +423,16 @@
 
       loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
 
+      /* ─── Pick up hero image passed from Visual Generator ─── */
+      (function checkVGHandoff() {
+        const vgSrc = sessionStorage.getItem('vg-hero-image');
+        if (!vgSrc) return;
+        sessionStorage.removeItem('vg-hero-image');
+        heroSlot.classList.add('has-file');
+        heroSlot.innerHTML = '<i class="bi bi-check-circle"></i>Image from Visual Generator';
+        loadImage(vgSrc).then(img => renderBanners(img));
+      })();
+
       /* ─── Live text update ─── */
       ['headingInput', 'subInput', 'ctaInput'].forEach(id => {
         document.getElementById(id).addEventListener('input', () => renderBanners());
