@@ -102,7 +102,8 @@
         position:absolute; inset:0; z-index:3; display:flex; flex-direction:column;
         justify-content:space-between; padding:8% 7%; pointer-events:none;
       }
-      .b-overlay .b-top { display:flex; flex-direction:column; align-items:flex-start; }
+      .b-overlay .b-top { display:flex; justify-content:space-between; align-items:flex-start; }
+      .b-overlay .b-top-left { display:flex; flex-direction:column; align-items:flex-start; }
       .b-overlay .b-heading {
         margin:0; color:#fff; font-weight:800; line-height:1.1;
         text-shadow:0 2px 6px rgba(0,0,0,.7); text-transform:uppercase; letter-spacing:.04em;
@@ -111,12 +112,19 @@
         margin:3px 0 0; color:rgba(255,255,255,.85); font-weight:500; line-height:1.2;
         text-shadow:0 1px 4px rgba(0,0,0,.6);
       }
-      .b-overlay .b-bottom { display:flex; align-items:flex-end; }
+      .b-overlay .b-logo-mark {
+        font-size:10px; font-weight:800; color:#fff; letter-spacing:.08em;
+        text-shadow:0 1px 4px rgba(0,0,0,.6); text-transform:uppercase; flex-shrink:0;
+      }
+      .b-overlay .b-bottom { display:flex; align-items:flex-end; justify-content:flex-end; }
       .b-overlay .b-cta {
         display:inline-block; padding:3px 8px; border-radius:3px;
         background:var(--yellow,#fff200); color:#1a1a1a; font-weight:700; font-size:8px;
         text-decoration:none; text-transform:uppercase; letter-spacing:.05em; pointer-events:auto;
       }
+
+      /* Leaderboard spans all columns */
+      .span-all { column-span:all; }
 
       .format-meta {
         padding:10px 12px; display:none; align-items:center; justify-content:space-between;
@@ -345,20 +353,27 @@
           if (src) drawCover(ctx, src, size.w, size.h);
           const dataUrl = canvas.toDataURL('image/png');
 
-          const headSize = Math.max(10, Math.min(28, size.h * 0.28));
+          const isSky = (size.w === 120 && size.h === 600);
+          const mult = isSky ? 3 : 1;
+          const headSize = Math.max(10, Math.min(28, size.h * 0.28)) * mult;
           const subSize = Math.max(7, headSize * 0.5);
-          const ctaSize = Math.max(6, Math.min(9, size.h * 0.08));
+          const ctaSize = Math.max(6, Math.min(9, size.h * 0.08)) * mult;
           const ctaPad = Math.max(2, ctaSize * 0.35);
+          const logoSize = Math.max(7, Math.min(12, size.h * 0.1)) * mult;
+          const isLeader = (size.w === 728 && size.h === 90);
 
           const card = document.createElement('article');
-          card.className = 'format-card';
+          card.className = 'format-card' + (isLeader ? ' span-all' : '');
           card.innerHTML = `
             <div class="preview-box" style="aspect-ratio:${size.w}/${size.h};">
               <img src="${dataUrl}" alt="${size.name} output" />
               <div class="b-overlay">
                 <div class="b-top">
-                  <div class="b-heading" style="font-size:${headSize}px;">${heading}</div>
-                  ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${sub}</div>` : ''}
+                  <div class="b-top-left">
+                    <div class="b-heading" style="font-size:${headSize}px;">${heading}</div>
+                    ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${sub}</div>` : ''}
+                  </div>
+                  <div class="b-logo-mark" style="font-size:${logoSize}px;">LOTUS</div>
                 </div>
                 <div class="b-bottom">
                   ${cta ? `<a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2.5}px;">${cta}</a>` : ''}
