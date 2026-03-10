@@ -315,6 +315,10 @@ body {
   background-image: url("./assets/thumbnails/edges-thumb.png");
 }
 
+.shot-6 {
+  background-image: url("./assets/thumbnails/iab-bannerset-thumb.png");
+}
+
 .card-body {
   padding: 17px;
   min-height: 210px;
