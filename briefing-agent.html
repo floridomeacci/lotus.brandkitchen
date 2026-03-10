@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Briefing Agent · Lotus Brand Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .briefing-content {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .briefing-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      .briefing-head p {
+        margin: 0;
+        color: #ede500;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .briefing-head h1 {
+        margin: 8px 0 0;
+        font-size: clamp(28px, 3.4vw, 40px);
+        letter-spacing: 0.06em;
+        font-weight: 500;
+      }
+
+      /* ─── Two-column shell ─── */
+      .briefing-shell {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        background: #1a1e28;
+        display: grid;
+        grid-template-columns: 310px 1fr;
+        gap: 0;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      /* ═══ LEFT: config panel ═══ */
+      .config-col {
+        padding: 18px 16px;
+        overflow-y: auto;
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .panel-title {
+        margin: 0 0 10px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #e8ecf5;
+      }
+
+      .config-card {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #121620;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+      }
+
+      .config-card:last-child { margin-bottom: 0; }
+
+      .cfg-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .cfg-grid label {
+        display: grid;
+        gap: 4px;
+        font-size: 10px;
+        color: #8f98aa;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .cfg-grid input,
+      .cfg-grid select,
+      .cfg-grid textarea {
+        background: #0f131b;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 8px;
+        color: #e9edf5;
+        font-size: 12px;
+        padding: 8px 9px;
+        font-family: inherit;
+      }
+
+      .cfg-grid textarea {
+        min-height: 60px;
+        resize: vertical;
+      }
+
+      .tag-row-cfg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 2px;
+      }
+
+      .tag-cfg {
+        border-radius: 999px;
+        padding: 3px 8px;
+        font-size: 9px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #c5cee0;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .tag-cfg.on {
+        border-color: rgba(237, 229, 0, 0.5);
+        color: #eee46d;
+        background: rgba(237, 229, 0, 0.07);
+      }
+
+      .generate-btn {
+        width: 100%;
+        margin-top: 12px;
+        border: 1px solid rgba(237, 229, 0, 0.45);
+        background: rgba(237, 229, 0, 0.08);
+        color: #eee46d;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 10px 12px;
+        cursor: pointer;
+        letter-spacing: 0.04em;
+      }
+
+      .generate-btn:hover {
+        background: rgba(237, 229, 0, 0.14);
+      }
+
+      .status-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 10px;
+        color: #95d9b0;
+        font-weight: 600;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7be5a1;
+        animation: blink 2s infinite;
+      }
+
+      /* ═══ RIGHT: document preview ═══ */
+      .preview-col {
+        background: #2a2e38;
+        overflow-y: auto;
+        padding: 28px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .doc-page {
+        width: 100%;
+        max-width: 680px;
+        background: #ffffff;
+        border-radius: 4px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+        padding: 48px 52px 56px;
+        color: #1a1a1a;
+        font-family: 'Times New Roman', Georgia, serif;
+        min-height: 900px;
+        overflow: hidden;
+      }
+
+      /* Document internals — white page */
+      .doc-logo-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #1a1a1a;
+      }
+
+      .doc-logo-bar img {
+        height: 28px;
+        filter: brightness(0);
+      }
+
+      .doc-meta-right {
+        text-align: right;
+        font-size: 10px;
+        color: #666;
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .doc-title {
+        margin: 24px 0 4px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #111;
+        text-transform: uppercase;
+      }
+
+      .doc-subtitle {
+        margin: 0 0 24px;
+        font-size: 14px;
+        color: #555;
+        font-style: italic;
+      }
+
+      .doc-section-head {
+        margin: 28px 0 10px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #ccc;
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #333;
+      }
+
+      .doc-field {
+        margin-bottom: 12px;
+      }
+
+      .doc-field-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 2px;
+      }
+
+      .doc-field-value {
+        font-size: 13px;
+        line-height: 1.55;
+        color: #1a1a1a;
+        margin: 0;
+      }
+
+      .doc-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .doc-channels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .doc-channel-tag {
+        display: inline-block;
+        border: 1px solid #bbb;
+        border-radius: 3px;
+        padding: 2px 7px;
+        font-family: 'Inter', sans-serif;
+        font-size: 9px;
+        font-weight: 600;
+        color: #444;
+        letter-spacing: 0.03em;
+      }
+
+      /* Team table inside doc */
+      .doc-team-table,
+      .doc-planning-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        margin-top: 4px;
+        table-layout: fixed;
+      }
+
+      .doc-team-table th,
+      .doc-team-table td,
+      .doc-planning-table th,
+      .doc-planning-table td {
+        text-align: left;
+        padding: 6px 5px;
+        border-bottom: 1px solid #e5e5e5;
+        word-break: break-word;
+      }
+
+      .doc-team-table th,
+      .doc-planning-table th {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #888;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .doc-team-table td,
+      .doc-planning-table td {
+        color: #222;
+      }
+
+      .doc-role-pill {
+        display: inline-block;
+        border-radius: 3px;
+        padding: 1px 6px;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .doc-role-lead {
+        background: #fff8cc;
+        color: #8a7a00;
+        border: 1px solid #e6d900;
+      }
+
+      .doc-role-core {
+        background: #e0f7e9;
+        color: #1a7a3a;
+        border: 1px solid #7be5a1;
+      }
+
+      .doc-role-support {
+        background: #f0f0f0;
+        color: #666;
+        border: 1px solid #ccc;
+      }
+
+      .doc-status-pill {
+        display: inline-block;
+        border-radius: 3px;
+        padding: 1px 6px;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .doc-st-done {
+        background: #e0f7e9;
+        color: #1a7a3a;
+        border: 1px solid #7be5a1;
+      }
+
+      .doc-st-active {
+        background: #fff8cc;
+        color: #8a7a00;
+        border: 1px solid #e6d900;
+      }
+
+      .doc-st-pending {
+        background: #f5f5f5;
+        color: #999;
+        border: 1px solid #ddd;
+      }
+
+      .doc-footer {
+        margin-top: 36px;
+        padding-top: 12px;
+        border-top: 1px solid #ccc;
+        font-family: 'Inter', sans-serif;
+        font-size: 9px;
+        color: #aaa;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      /* ─── Shared ─── */
+      .active-app {
+        color: #f3f5fb;
+        font-weight: 600;
+      }
+
+      .active-app .ico {
+        color: #ede500;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.55; }
+      }
+
+      @media (max-width: 1240px) {
+        .briefing-shell {
+          grid-template-columns: 280px 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .briefing-content {
+          height: auto;
+          overflow: visible;
+          padding: 26px 18px 24px;
+        }
+
+        .briefing-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .briefing-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .config-col {
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .doc-page {
+          padding: 28px 24px 32px;
+        }
+
+        .doc-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-panel">
+          <div class="lotus-mark">
+            <img class="lotus-logo" src="./Lotus_Cars_logo.svg.png" alt="Lotus Cars" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">CA</div>
+          <div class="profile-copy">
+            <h2>Cliff Allison</h2>
+            <p>Users Role title</p>
+          </div>
+        </div>
+
+        <button class="tenant">Lotus Tenant <span>⌄</span></button>
+
+        <div class="menu-group">
+          <span class="menu-label">USER DETAILS</span>
+          <ul>
+            <li><i class="ico bi bi-person"></i><span>Profile</span></li>
+            <li><i class="ico bi bi-people"></i><span>Users &amp; Groups</span></li>
+            <li><i class="ico bi bi-grid"></i><span>Manage Apps</span></li>
+            <li><i class="ico bi bi-columns-gap"></i><span>Manage Tenants</span></li>
+            <li><i class="ico bi bi-bell"></i><span>Notifications</span></li>
+            <li><i class="ico bi bi-box-arrow-right"></i><span>Log Out</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group">
+          <span class="menu-label">LOTUS APPS</span>
+          <ul>
+            <li class="app-nav-item" data-href="./content-kalender.html" tabindex="0" role="link"><i class="ico bi bi-calendar3"></i><span>Cross Market Content Planner</span></li>
+            <li class="app-nav-item" data-href="./asset-scaler.html" tabindex="0" role="link"><i class="ico bi bi-bounding-box"></i><span>Asset scaler</span></li>
+            <li class="app-nav-item" data-href="./brand-guardian.html" tabindex="0" role="link"><i class="ico bi bi-shield-check"></i><span>Brand Guardian</span></li>
+            <li class="active-app app-nav-item" data-href="./briefing-agent.html" tabindex="0" role="link"><i class="ico bi bi-megaphone"></i><span>Briefing Agent</span></li>
+            <li class="app-nav-item" data-href="./visual-generator.html" tabindex="0" role="link"><i class="ico bi bi-bezier2"></i><span>Visual Generator</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group favourites">
+          <span class="menu-label">MY FAVOURITES</span>
+          <ul>
+            <li><i class="ico bi bi-bezier2"></i><span>Visual Generator</span><b class="fav-dot"></b></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="footer-mark"><img class="omc-logo" src="./omc.png" alt="OMC" /></div>
+          <button><i class="bi bi-headset"></i>Contact Support</button>
+          <small>Legals and Copyright go here</small>
+        </div>
+      </aside>
+
+      <main class="content briefing-content">
+        <header class="briefing-head">
+          <div>
+            <p>Campaign Intelligence · Live Demo</p>
+            <h1>BRIEFING AGENT</h1>
+          </div>
+        </header>
+
+        <section class="briefing-shell">
+          <!-- ═══ LEFT: Config / Controls ═══ -->
+          <div class="config-col">
+            <article class="config-card">
+              <h2 class="panel-title">Brief Setup</h2>
+              <div class="cfg-grid">
+                <label>Campaign Title
+                  <input type="text" value="Emira V6 — Performance Launch" />
+                </label>
+                <label>Market Focus
+                  <select>
+                    <option selected>Germany + Italy</option>
+                    <option>UK</option>
+                    <option>Nordics</option>
+                    <option>APAC</option>
+                  </select>
+                </label>
+                <label>Objective
+                  <textarea>Drive qualified test-drive leads with premium positioning across paid social, display and OOH channels.</textarea>
+                </label>
+                <label>Audience
+                  <input type="text" value="35-54, luxury performance seekers" />
+                </label>
+                <label>Tone
+                  <select>
+                    <option selected>Minimal / Cinematic</option>
+                    <option>Bold / Energetic</option>
+                    <option>Warm / Emotional</option>
+                  </select>
+                </label>
+                <label>Channels
+                  <div class="tag-row-cfg">
+                    <span class="tag-cfg on">Paid Social</span>
+                    <span class="tag-cfg on">Display</span>
+                    <span class="tag-cfg on">OOH</span>
+                    <span class="tag-cfg">CRM</span>
+                    <span class="tag-cfg">Dealer Kit</span>
+                  </div>
+                </label>
+              </div>
+            </article>
+
+            <article class="config-card">
+              <h2 class="panel-title">Team</h2>
+              <div class="cfg-grid">
+                <label>Campaign Lead
+                  <input type="text" value="Maria Rossi" />
+                </label>
+                <label>Creative Director
+                  <input type="text" value="Jan Keller" />
+                </label>
+                <label>Copywriter
+                  <input type="text" value="Laura Schiffer" />
+                </label>
+                <label>Media Planner
+                  <input type="text" value="Nico Bauer" />
+                </label>
+              </div>
+            </article>
+
+            <article class="config-card">
+              <h2 class="panel-title">Planning</h2>
+              <div class="cfg-grid">
+                <label>Kick-off Date
+                  <input type="text" value="10 Mar 2026" />
+                </label>
+                <label>Go-Live Date
+                  <input type="text" value="31 Mar 2026" />
+                </label>
+              </div>
+            </article>
+
+            <button class="generate-btn"><i class="bi bi-file-earmark-text"></i>&ensp;Generate Brief</button>
+            <div class="status-row"><span class="status-dot"></span>Document ready</div>
+          </div>
+
+          <!-- ═══ RIGHT: Word-doc preview ═══ -->
+          <div class="preview-col">
+            <div class="doc-page">
+
+              <!-- Doc header -->
+              <div class="doc-logo-bar">
+                <img src="./Lotus_Cars_logo.svg.png" alt="Lotus" />
+                <div class="doc-meta-right">
+                  BRIEF-2026-0047<br/>
+                  10 March 2026<br/>
+                  <strong>PRIORITY</strong>
+                </div>
+              </div>
+
+              <h1 class="doc-title">Emira V6 — Performance Launch</h1>
+              <p class="doc-subtitle">Campaign Brief · Germany + Italy</p>
+
+              <!-- 1. Assignment -->
+              <h2 class="doc-section-head">1 &ensp;Assignment</h2>
+
+              <div class="doc-row">
+                <div class="doc-field">
+                  <div class="doc-field-label">Objective</div>
+                  <p class="doc-field-value">Drive qualified test-drive leads with premium positioning across paid social, display and OOH channels.</p>
+                </div>
+                <div class="doc-field">
+                  <div class="doc-field-label">Target Audience</div>
+                  <p class="doc-field-value">35-54, luxury performance seekers, motorsport affinity, high-income urban professionals.</p>
+                </div>
+              </div>
+
+              <div class="doc-field">
+                <div class="doc-field-label">Tone &amp; Direction</div>
+                <p class="doc-field-value">Minimal, cinematic, precision-forward storytelling. Lead with emotional velocity, close on technical precision. Hero line should feel aspirational yet grounded.</p>
+              </div>
+
+              <div class="doc-field">
+                <div class="doc-field-label">Channels</div>
+                <div class="doc-channels">
+                  <span class="doc-channel-tag">Paid Social</span>
+                  <span class="doc-channel-tag">Display</span>
+                  <span class="doc-channel-tag">OOH</span>
+                  <span class="doc-channel-tag">CRM</span>
+                  <span class="doc-channel-tag">Dealer Toolkit</span>
+                </div>
+              </div>
+
+              <div class="doc-field">
+                <div class="doc-field-label">Key Messages</div>
+                <p class="doc-field-value">Support claims with Emira V6 spec points only in final frames. Reserve hard performance data for closing sequences. Let visuals carry momentum throughout.</p>
+              </div>
+
+              <!-- 2. Team -->
+              <h2 class="doc-section-head">2 &ensp;Team</h2>
+
+              <table class="doc-team-table">
+                <thead>
+                  <tr><th>Name</th><th>Role</th><th>Type</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Maria Rossi</td><td>Campaign Lead</td><td><span class="doc-role-pill doc-role-lead">LEAD</span></td></tr>
+                  <tr><td>Jan Keller</td><td>Creative Director</td><td><span class="doc-role-pill doc-role-core">CORE</span></td></tr>
+                  <tr><td>Laura Schiffer</td><td>Copywriter</td><td><span class="doc-role-pill doc-role-core">CORE</span></td></tr>
+                  <tr><td>Nico Bauer</td><td>Media Planner</td><td><span class="doc-role-pill doc-role-support">SUPPORT</span></td></tr>
+                  <tr><td>Alessia Tomasi</td><td>Market Strategist IT</td><td><span class="doc-role-pill doc-role-support">SUPPORT</span></td></tr>
+                  <tr><td>Paul Weber</td><td>Production Lead</td><td><span class="doc-role-pill doc-role-support">SUPPORT</span></td></tr>
+                </tbody>
+              </table>
+
+              <!-- 3. Planning -->
+              <h2 class="doc-section-head">3 &ensp;Planning</h2>
+
+              <table class="doc-planning-table">
+                <thead>
+                  <tr><th style="width:16%">Phase</th><th style="width:34%">Deliverable</th><th style="width:18%">Owner</th><th style="width:12%">Date</th><th style="width:20%">Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Kick-off</strong></td><td>Brief sign-off &amp; alignment workshop</td><td>Maria Rossi</td><td>10 Mar</td><td><span class="doc-status-pill doc-st-done">DONE</span></td></tr>
+                  <tr><td><strong>Concept</strong></td><td>3 creative routes with hero lines</td><td>Jan Keller</td><td>14 Mar</td><td><span class="doc-status-pill doc-st-active">IN PROGRESS</span></td></tr>
+                  <tr><td><strong>Copy</strong></td><td>Long + short-form copy per channel</td><td>Laura Schiffer</td><td>18 Mar</td><td><span class="doc-status-pill doc-st-pending">PENDING</span></td></tr>
+                  <tr><td><strong>Visual Production</strong></td><td>Key visuals, motion assets, OOH adapt</td><td>Paul Weber</td><td>24 Mar</td><td><span class="doc-status-pill doc-st-pending">PENDING</span></td></tr>
+                  <tr><td><strong>Media Plan</strong></td><td>Channel mix, budget split DE/IT</td><td>Nico Bauer</td><td>20 Mar</td><td><span class="doc-status-pill doc-st-pending">PENDING</span></td></tr>
+                  <tr><td><strong>Localisation</strong></td><td>IT copy transcreation &amp; cultural review</td><td>Alessia Tomasi</td><td>26 Mar</td><td><span class="doc-status-pill doc-st-pending">PENDING</span></td></tr>
+                  <tr><td><strong>Go-Live</strong></td><td>Final asset packs to media partners</td><td>Maria Rossi</td><td>31 Mar</td><td><span class="doc-status-pill doc-st-pending">PENDING</span></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Footer -->
+              <div class="doc-footer">
+                <span>Lotus Brand Kitchen · Confidential</span>
+                <span>Page 1 of 1</span>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.querySelectorAll('.app-nav-item[data-href]').forEach((item) => {
+        const go = () => {
+          const href = item.getAttribute('data-href');
+          if (href) window.location.href = href;
+        };
+
+        item.addEventListener('click', go);
+        item.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            go();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

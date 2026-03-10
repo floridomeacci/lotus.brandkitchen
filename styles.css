@@ -1,0 +1,433 @@
+@import url("https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg: #151515;
+  --workspace: #303136;
+  --panel: #212126;
+  --text: #f2f1f0;
+  --muted: #5c5c5c;
+  --card: #212126;
+  --yellow: #fff200;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  font-family: Overpass, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  padding: 10px;
+}
+
+.app-shell {
+  display: flex;
+  min-height: calc(100vh - 20px);
+  background: var(--workspace);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 264px;
+  min-width: 264px;
+  flex: 0 0 264px;
+  height: calc(100vh - 52px);
+  margin: 16px 0 16px 12px;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.08), 3px 6px 7px rgba(0, 0, 0, 0.07),
+    6px 14px 9px rgba(0, 0, 0, 0.04), 11px 25px 11px rgba(0, 0, 0, 0.01),
+    17px 39px 12px rgba(0, 0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-panel {
+  background: #fff200;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0;
+  color: #101114;
+}
+
+.lotus-mark {
+  width: 78px;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff200;
+}
+
+.lotus-logo {
+  width: 64px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.lotus-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.lotus-text {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.profile {
+  display: flex;
+  gap: 8px;
+  padding: 16px 16px 8px;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f2f1f0;
+  color: #1b1b1b;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.profile-copy h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.profile-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.tenant {
+  margin: 8px 16px 8px;
+  border: 1px solid #5c5c5c;
+  border-radius: 4px;
+  background: #151517;
+  color: #f2f1f0;
+  text-align: left;
+  height: 40px;
+  padding: 0 12px 0 16px;
+  font-size: 12px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-group {
+  padding: 8px 16px;
+  margin: 0;
+  border-top: 1px solid #303136;
+}
+
+.menu-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #5c5c5c;
+  padding: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.menu-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-group li {
+  min-height: 40px;
+  padding: 0;
+  color: #f2f1f0;
+  font-size: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  line-height: 1.4;
+}
+
+.menu-group li.app-nav-item {
+  cursor: pointer;
+}
+
+.menu-group li.app-nav-item:hover {
+  color: #ffffff;
+}
+
+.ico {
+  color: #f2f1f0;
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+}
+
+.fav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-left: auto;
+  background: var(--yellow);
+}
+
+.favourites {
+  margin-top: 0;
+}
+
+.sidebar-footer {
+  border-top: 1px solid #303136;
+  margin: auto 0 0;
+  padding: 24px 16px 16px;
+}
+
+.footer-mark {
+  color: #c8cad2;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.omc-logo {
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sidebar-footer button {
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 0 4px;
+  background: transparent;
+  color: #f2f1f0;
+  text-align: left;
+  font-size: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sidebar-footer small {
+  display: block;
+  color: rgba(242, 241, 240, 0.2);
+  margin-top: 0;
+  font-size: 12px;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 44px 40px 36px 54px;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--yellow);
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.4;
+}
+
+.page-header h1 {
+  margin: 8px 0 40px;
+  font-weight: 400;
+  font-size: clamp(42px, 4.2vw, 59px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(260px, 280px));
+  gap: 22px;
+  max-width: 1210px;
+}
+
+.app-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 17px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 378px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1), 2px 4px 4px rgba(0, 0, 0, 0.09),
+    5px 8px 6px rgba(0, 0, 0, 0.05), 9px 14px 7px rgba(0, 0, 0, 0.01),
+    14px 23px 7px rgba(0, 0, 0, 0);
+}
+
+.thumb {
+  height: 168px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.shot-1 {
+  background-image: url("./assets/thumbnails/content-kalender-thumb.png");
+}
+
+.shot-2 {
+  background-image: url("./assets/thumbnails/asset-scaler-thumb.png");
+}
+
+.shot-3 {
+  background-image: url("./assets/thumbnails/brand-guardian-thumb.png");
+}
+
+.shot-4 {
+  background-image: url("./assets/thumbnails/briefing-agent-thumb.png");
+}
+
+.shot-5 {
+  background-image: url("./assets/thumbnails/edges-thumb.png");
+}
+
+.card-body {
+  padding: 17px;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-ico {
+  color: #505666;
+  font-size: 25px;
+  font-style: normal;
+}
+
+.card-body h3 {
+  margin: 8px 0;
+  font-size: 23px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.card-body p {
+  margin: 0;
+  font-size: 12px;
+  color: #50505b;
+  line-height: 1.4;
+}
+
+.app-card.clickable {
+  cursor: pointer;
+}
+
+.app-card.clickable:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.badge {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  background: var(--yellow);
+  color: #131313;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 5px 12px;
+  z-index: 2;
+}
+
+.pin {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #212126;
+  color: #d9dce3;
+  font-size: 12px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+}
+
+@media (max-width: 1360px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .sidebar {
+    width: 242px;
+    min-width: 242px;
+    flex-basis: 242px;
+    margin-left: 10px;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+
+  .content {
+    padding-left: 28px;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    padding: 0;
+  }
+
+  .app-shell {
+    flex-direction: column;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    flex-basis: auto;
+    height: auto;
+    margin: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

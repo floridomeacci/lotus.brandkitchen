@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Scaler · Lotus Brand Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .scaler-content {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .scaler-head {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      .scaler-head p {
+        margin: 0;
+        color: #ede500;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .scaler-head h1 {
+        margin: 8px 0 0;
+        font-size: clamp(28px, 3.4vw, 40px);
+        letter-spacing: 0.06em;
+        font-weight: 500;
+      }
+
+      .download-all-sizes {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #dce1eb;
+        background: #151922;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tool-shell {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        background: #1a1e28;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 16px;
+        min-height: 0;
+        flex: 1;
+        overflow: auto;
+        padding: 16px;
+      }
+
+      .input-panel {
+        align-self: start;
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .outputs-panel h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #e8ecf5;
+      }
+
+      .outputs-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .input-preview {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #0e1219;
+        margin-bottom: 12px;
+      }
+
+      .input-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .input-meta {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #9aa3b6;
+      }
+
+      .input-card {
+        margin-top: 0;
+      }
+
+
+      .input-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 34px;
+        margin-bottom: 10px;
+      }
+
+      .input-head h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #e8ecf5;
+      }
+
+      .formats-masonry {
+        column-count: 3;
+        column-gap: 14px;
+      }
+
+      .format-card {
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 12px;
+        background: #121620;
+        overflow: hidden;
+        break-inside: avoid;
+        margin: 0 0 14px;
+        width: 100%;
+        display: inline-block;
+      }
+
+      .preview-box {
+        width: 100%;
+        background: #0e1219;
+        display: grid;
+        place-items: center;
+      }
+
+      .preview-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .format-meta {
+        padding: 10px;
+      }
+
+      .format-meta h3 {
+        margin: 0;
+        font-size: 13px;
+        color: #eef2f8;
+      }
+
+      .format-meta p {
+        margin: 4px 0 0;
+        font-size: 11px;
+        color: #8f98aa;
+      }
+
+      .active-app {
+        color: #f3f5fb;
+        font-weight: 600;
+      }
+
+      .active-app .ico {
+        color: #ede500;
+      }
+
+      @media (max-width: 1240px) {
+        .tool-shell {
+          grid-template-columns: 280px 1fr;
+        }
+
+        .formats-masonry {
+          column-count: 2;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .scaler-content {
+          height: auto;
+          overflow: visible;
+          padding: 26px 18px 24px;
+        }
+
+        .scaler-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .tool-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .input-panel {
+          position: static;
+        }
+
+        .formats-masonry {
+          column-count: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-panel">
+          <div class="lotus-mark">
+            <img class="lotus-logo" src="./Lotus_Cars_logo.svg.png" alt="Lotus Cars" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">CA</div>
+          <div class="profile-copy">
+            <h2>Cliff Allison</h2>
+            <p>Users Role title</p>
+          </div>
+        </div>
+
+        <button class="tenant">Lotus Tenant <span>⌄</span></button>
+
+        <div class="menu-group">
+          <span class="menu-label">USER DETAILS</span>
+          <ul>
+            <li><i class="ico bi bi-person"></i><span>Profile</span></li>
+            <li><i class="ico bi bi-people"></i><span>Users &amp; Groups</span></li>
+            <li><i class="ico bi bi-grid"></i><span>Manage Apps</span></li>
+            <li><i class="ico bi bi-columns-gap"></i><span>Manage Tenants</span></li>
+            <li><i class="ico bi bi-bell"></i><span>Notifications</span></li>
+            <li><i class="ico bi bi-box-arrow-right"></i><span>Log Out</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group">
+          <span class="menu-label">LOTUS APPS</span>
+          <ul>
+            <li class="app-nav-item" data-href="./content-kalender.html" tabindex="0" role="link"><i class="ico bi bi-calendar3"></i><span>Cross Market Content Planner</span></li>
+            <li class="active-app app-nav-item" data-href="./asset-scaler.html" tabindex="0" role="link"><i class="ico bi bi-bounding-box"></i><span>Asset scaler</span></li>
+            <li class="app-nav-item" data-href="./brand-guardian.html" tabindex="0" role="link"><i class="ico bi bi-shield-check"></i><span>Brand Guardian</span></li>
+            <li class="app-nav-item" data-href="./briefing-agent.html" tabindex="0" role="link"><i class="ico bi bi-megaphone"></i><span>Briefing Agent</span></li>
+            <li class="app-nav-item" data-href="./visual-generator.html" tabindex="0" role="link"><i class="ico bi bi-bezier2"></i><span>Visual Generator</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group favourites">
+          <span class="menu-label">MY FAVOURITES</span>
+          <ul>
+            <li><i class="ico bi bi-bezier2"></i><span>Visual Generator</span><b class="fav-dot"></b></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="footer-mark"><img class="omc-logo" src="./omc.png" alt="OMC" /></div>
+          <button><i class="bi bi-headset"></i>Contact Support</button>
+          <small>Legals and Copyright go here</small>
+        </div>
+      </aside>
+
+      <main class="content scaler-content">
+        <header class="scaler-head">
+          <div>
+            <p>Image Utility · Demo Ready</p>
+            <h1>ASSET SCALER</h1>
+          </div>
+        </header>
+
+        <section class="tool-shell">
+          <aside class="input-panel">
+              <div class="input-head">
+                <h2>INPUT IMAGE</h2>
+              </div>
+            <article class="format-card input-card">
+              <div class="input-preview">
+                <img id="inputPreview" alt="Input preview" />
+              </div>
+              <div class="format-meta">
+                <h3>Input Thumbnail</h3>
+                <p>Source image for all resized outputs.</p>
+              </div>
+            </article>
+            <div class="input-meta" id="inputMeta">
+              Loaded demo source
+            </div>
+          </aside>
+
+          <div class="outputs-panel">
+            <div class="outputs-head">
+              <h2>OUTPUT</h2>
+              <button id="downloadAllBtn" class="download-all-sizes" type="button">
+                <i class="bi bi-download"></i> Download all sizes
+              </button>
+            </div>
+            <div id="formatsGrid" class="formats-masonry"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const FORMATS = [
+        { key: "hero-desktop", name: "Hero Desktop", width: 1920, height: 1080 },
+        { key: "hero-ultrawide", name: "Hero Ultrawide", width: 2560, height: 1080 },
+        { key: "web-banner", name: "Web Banner", width: 1600, height: 600 },
+        { key: "open-graph", name: "Open Graph", width: 1200, height: 630 },
+        { key: "square-social", name: "Square Social", width: 1080, height: 1080 },
+        { key: "story-portrait", name: "Story / Reels", width: 1080, height: 1920 },
+        { key: "mobile-hero", name: "Mobile Hero", width: 1170, height: 2532 },
+        { key: "thumbnail", name: "Thumbnail", width: 640, height: 360 },
+      ];
+
+      const formatsGrid = document.getElementById("formatsGrid");
+      const inputPreview = document.getElementById("inputPreview");
+      const inputMeta = document.getElementById("inputMeta");
+  const downloadAllBtn = document.getElementById("downloadAllBtn");
+      const defaultImage = "./assets/generated/asset-scaler.png";
+  let generatedOutputs = [];
+
+      function ratioLabel(width, height) {
+        const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+        const d = gcd(width, height);
+        return `${width / d}:${height / d}`;
+      }
+
+      function drawCover(ctx, img, targetWidth, targetHeight) {
+        const sourceRatio = img.width / img.height;
+        const targetRatio = targetWidth / targetHeight;
+        let drawWidth;
+        let drawHeight;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (sourceRatio > targetRatio) {
+          drawHeight = targetHeight;
+          drawWidth = drawHeight * sourceRatio;
+          offsetX = (targetWidth - drawWidth) / 2;
+        } else {
+          drawWidth = targetWidth;
+          drawHeight = drawWidth / sourceRatio;
+          offsetY = (targetHeight - drawHeight) / 2;
+        }
+
+        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      }
+
+      function renderFormats(img) {
+        formatsGrid.innerHTML = "";
+        inputPreview.src = img.src;
+        inputMeta.textContent = `Source: ${img.width} × ${img.height} · Ratio ${ratioLabel(img.width, img.height)}`;
+        generatedOutputs = [];
+
+        FORMATS.forEach((format) => {
+          const canvas = document.createElement("canvas");
+          canvas.width = format.width;
+          canvas.height = format.height;
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#0e1219";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          drawCover(ctx, img, canvas.width, canvas.height);
+
+          const outputDataUrl = canvas.toDataURL("image/png");
+          generatedOutputs.push({
+            fileName: `${format.key}.png`,
+            dataUrl: outputDataUrl,
+          });
+          const card = document.createElement("article");
+          card.className = "format-card";
+
+          card.innerHTML = `
+            <div class="preview-box" style="aspect-ratio:${format.width}/${format.height};">
+              <img src="${outputDataUrl}" alt="${format.name} output" />
+            </div>
+            <div class="format-meta">
+              <h3>${format.name}</h3>
+              <p>${format.width} × ${format.height} · Ratio ${ratioLabel(format.width, format.height)}</p>
+            </div>
+          `;
+
+          formatsGrid.appendChild(card);
+        });
+      }
+
+      function downloadAllSizes() {
+        generatedOutputs.forEach((output, index) => {
+          setTimeout(() => {
+            const link = document.createElement("a");
+            link.href = output.dataUrl;
+            link.download = output.fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          }, index * 120);
+        });
+      }
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = src;
+        });
+      }
+
+      downloadAllBtn.addEventListener("click", downloadAllSizes);
+
+      document.querySelectorAll('.app-nav-item[data-href]').forEach((item) => {
+        const go = () => {
+          const href = item.getAttribute('data-href');
+          if (href) window.location.href = href;
+        };
+
+        item.addEventListener('click', go);
+        item.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            go();
+          }
+        });
+      });
+
+      loadImage(defaultImage)
+        .then((image) => renderFormats(image))
+        .catch(() => {
+          inputMeta.textContent = "Default image missing. Upload an image.";
+          formatsGrid.innerHTML = `<p style="color:#aeb5c3; font-size:13px;">Default demo image not found. Upload an image to generate all output formats.</p>`;
+        });
+    </script>
+  </body>
+</html>

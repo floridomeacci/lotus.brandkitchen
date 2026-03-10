@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Generator · Lotus Brand Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .vg-content {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .vg-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      .vg-head p {
+        margin: 0;
+        color: #ede500;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .vg-head h1 {
+        margin: 8px 0 0;
+        font-size: clamp(28px, 3.4vw, 40px);
+        letter-spacing: 0.06em;
+        font-weight: 500;
+      }
+
+      .vg-shell {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        background: #1a1e28;
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 16px;
+        min-height: 0;
+        flex: 1;
+        overflow: auto;
+        padding: 16px;
+      }
+
+      .panel-title {
+        margin: 0 0 10px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #e8ecf5;
+      }
+
+      .prompt-col {
+        align-self: start;
+        position: sticky;
+        top: 0;
+      }
+
+      .prompt-card,
+      .output-card {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #121620;
+        border-radius: 12px;
+      }
+
+      .prompt-body {
+        padding: 12px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .prompt-body label {
+        display: grid;
+        gap: 5px;
+        font-size: 11px;
+        color: #8f98aa;
+      }
+
+      .prompt-body input,
+      .prompt-body select,
+      .prompt-body textarea {
+        background: #0f131b;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 8px;
+        color: #e9edf5;
+        font-size: 12px;
+        padding: 8px 9px;
+        font-family: inherit;
+      }
+
+      .prompt-body textarea {
+        min-height: 86px;
+        resize: vertical;
+      }
+
+      .generate-btn {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: #161b25;
+        color: #ebeff8;
+        border-radius: 999px;
+        font-size: 12px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+
+      .output-col {
+        min-width: 0;
+      }
+
+      .output-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .variant-chip {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        color: #c8cfdd;
+        font-size: 10px;
+        padding: 5px 9px;
+      }
+
+      .output-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .output-card {
+        overflow: hidden;
+      }
+
+      .out-img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #0d1016;
+      }
+
+      .out-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .out-meta {
+        padding: 10px;
+      }
+
+      .out-meta h3 {
+        margin: 0;
+        font-size: 13px;
+        color: #eff3f8;
+      }
+
+      .out-meta p {
+        margin: 4px 0 0;
+        font-size: 11px;
+        color: #96a0b3;
+      }
+
+      .active-app {
+        color: #f3f5fb;
+        font-weight: 600;
+      }
+
+      .active-app .ico {
+        color: #ede500;
+      }
+
+      @media (max-width: 1240px) {
+        .vg-shell {
+          grid-template-columns: 300px 1fr;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .output-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .vg-content {
+          height: auto;
+          overflow: visible;
+          padding: 26px 18px 24px;
+        }
+
+        .vg-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .vg-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .prompt-col {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-panel">
+          <div class="lotus-mark">
+            <img class="lotus-logo" src="./Lotus_Cars_logo.svg.png" alt="Lotus Cars" />
+          </div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">CA</div>
+          <div class="profile-copy">
+            <h2>Cliff Allison</h2>
+            <p>Users Role title</p>
+          </div>
+        </div>
+
+        <button class="tenant">Lotus Tenant <span>⌄</span></button>
+
+        <div class="menu-group">
+          <span class="menu-label">USER DETAILS</span>
+          <ul>
+            <li><i class="ico bi bi-person"></i><span>Profile</span></li>
+            <li><i class="ico bi bi-people"></i><span>Users &amp; Groups</span></li>
+            <li><i class="ico bi bi-grid"></i><span>Manage Apps</span></li>
+            <li><i class="ico bi bi-columns-gap"></i><span>Manage Tenants</span></li>
+            <li><i class="ico bi bi-bell"></i><span>Notifications</span></li>
+            <li><i class="ico bi bi-box-arrow-right"></i><span>Log Out</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group">
+          <span class="menu-label">LOTUS APPS</span>
+          <ul>
+            <li class="app-nav-item" data-href="./content-kalender.html" tabindex="0" role="link"><i class="ico bi bi-calendar3"></i><span>Cross Market Content Planner</span></li>
+            <li class="app-nav-item" data-href="./asset-scaler.html" tabindex="0" role="link"><i class="ico bi bi-bounding-box"></i><span>Asset scaler</span></li>
+            <li class="app-nav-item" data-href="./brand-guardian.html" tabindex="0" role="link"><i class="ico bi bi-shield-check"></i><span>Brand Guardian</span></li>
+            <li class="app-nav-item" data-href="./briefing-agent.html" tabindex="0" role="link"><i class="ico bi bi-megaphone"></i><span>Briefing Agent</span></li>
+            <li class="active-app app-nav-item" data-href="./visual-generator.html" tabindex="0" role="link"><i class="ico bi bi-bezier2"></i><span>Visual Generator</span></li>
+          </ul>
+        </div>
+
+        <div class="menu-group favourites">
+          <span class="menu-label">MY FAVOURITES</span>
+          <ul>
+            <li><i class="ico bi bi-bezier2"></i><span>Visual Generator</span><b class="fav-dot"></b></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="footer-mark"><img class="omc-logo" src="./omc.png" alt="OMC" /></div>
+          <button><i class="bi bi-headset"></i>Contact Support</button>
+          <small>Legals and Copyright go here</small>
+        </div>
+      </aside>
+
+      <main class="content vg-content">
+        <header class="vg-head">
+          <div>
+            <p>Concept Studio · Demo Ready</p>
+            <h1>VISUAL GENERATOR</h1>
+          </div>
+        </header>
+
+        <section class="vg-shell">
+          <div class="prompt-col">
+            <h2 class="panel-title">INPUT PROMPT</h2>
+            <form id="vgForm" class="prompt-card prompt-body">
+              <label>
+                Campaign objective
+                <input name="objective" value="Launch Emira spring campaign" />
+              </label>
+              <label>
+                Market
+                <select name="market">
+                  <option>Pan-Europe</option>
+                  <option>United Kingdom</option>
+                  <option>Germany</option>
+                  <option>France</option>
+                </select>
+              </label>
+              <label>
+                Visual style
+                <select name="style">
+                  <option>Cinematic premium</option>
+                  <option>Studio minimal</option>
+                  <option>Urban night</option>
+                  <option>Editorial clean</option>
+                </select>
+              </label>
+              <label>
+                Prompt
+                <textarea name="prompt">Futuristic yellow sports car in dramatic low-light studio, elegant reflections, cinematic composition, no text.</textarea>
+              </label>
+              <button class="generate-btn" type="submit">Generate concepts</button>
+            </form>
+          </div>
+
+          <div class="output-col">
+            <div class="output-head">
+              <h2 class="panel-title" style="margin:0;">OUTPUT</h2>
+              <span id="variantInfo" class="variant-chip">4 visual variants</span>
+            </div>
+
+            <div id="outputGrid" class="output-grid"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const outputGrid = document.getElementById('outputGrid');
+      const variantInfo = document.getElementById('variantInfo');
+      const vgForm = document.getElementById('vgForm');
+
+      const variantImages = [
+        './assets/generated/edges.png',
+        './assets/generated/asset-scaler.png',
+        './assets/generated/brand-guardian.png',
+        './assets/generated/content-kalender.png',
+      ];
+
+      function renderOutputs(meta) {
+        outputGrid.innerHTML = '';
+        variantImages.forEach((src, idx) => {
+          const card = document.createElement('article');
+          card.className = 'output-card';
+          card.innerHTML = `
+            <div class="out-img"><img src="${src}" alt="Generated concept ${idx + 1}" /></div>
+            <div class="out-meta">
+              <h3>Variant ${idx + 1}</h3>
+              <p>${meta.style} · ${meta.market} · ${meta.objective}</p>
+            </div>
+          `;
+          outputGrid.appendChild(card);
+        });
+        variantInfo.textContent = `${variantImages.length} visual variants`;
+      }
+
+      vgForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(vgForm);
+        renderOutputs({
+          objective: String(formData.get('objective') || 'Campaign concept'),
+          market: String(formData.get('market') || 'Pan-Europe'),
+          style: String(formData.get('style') || 'Cinematic premium'),
+        });
+      });
+
+      renderOutputs({
+        objective: 'Launch Emira spring campaign',
+        market: 'Pan-Europe',
+        style: 'Cinematic premium',
+      });
+
+      document.querySelectorAll('.app-nav-item[data-href]').forEach((item) => {
+        const go = () => {
+          const href = item.getAttribute('data-href');
+          if (href) window.location.href = href;
+        };
+
+        item.addEventListener('click', go);
+        item.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            go();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
