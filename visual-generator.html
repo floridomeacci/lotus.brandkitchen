@@ -393,7 +393,11 @@
       /* Render generated image cards */
       function renderImages(images, meta) {
         outputGrid.innerHTML = '';
-        images.forEach((src, idx) => {
+        /* Proxy external URLs through our backend for CORS compatibility */
+        const proxied = images.map(src =>
+          src.startsWith('https://replicate.delivery/') ? '/api/proxy-image?url=' + encodeURIComponent(src) : src
+        );
+        proxied.forEach((src, idx) => {
           const card = document.createElement('article');
           card.className = 'output-card';
           card.innerHTML = `
@@ -417,7 +421,7 @@
           });
         });
 
-        variantInfo.textContent = `${images.length} generated image${images.length !== 1 ? 's' : ''}`;
+        variantInfo.textContent = `${proxied.length} generated image${proxied.length !== 1 ? 's' : ''}`;
       }
 
       /* Generate images via Seedream 4 */
