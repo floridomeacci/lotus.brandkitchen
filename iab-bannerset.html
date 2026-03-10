@@ -100,18 +100,23 @@
       /* Banner text overlay */
       .b-overlay {
         position:absolute; inset:0; z-index:3; display:flex; flex-direction:column;
-        justify-content:center; padding:8% 6%; pointer-events:none;
+        justify-content:space-between; padding:8% 7%; pointer-events:none;
       }
-      .b-overlay.b-wide { flex-direction:row; align-items:center; gap:8px; }
-      .b-overlay .b-heading { margin:0; color:#fff; font-weight:800; line-height:1.15; text-shadow:0 1px 4px rgba(0,0,0,.6); }
-      .b-overlay .b-sub { margin:4px 0 0; color:rgba(255,255,255,.8); font-weight:400; text-shadow:0 1px 3px rgba(0,0,0,.5); }
-      .b-overlay.b-wide .b-sub { margin:0; white-space:nowrap; }
+      .b-overlay .b-top { display:flex; flex-direction:column; align-items:flex-start; }
+      .b-overlay .b-heading {
+        margin:0; color:#fff; font-weight:800; line-height:1.1;
+        text-shadow:0 2px 6px rgba(0,0,0,.7); text-transform:uppercase; letter-spacing:.04em;
+      }
+      .b-overlay .b-sub {
+        margin:3px 0 0; color:rgba(255,255,255,.85); font-weight:500; line-height:1.2;
+        text-shadow:0 1px 4px rgba(0,0,0,.6);
+      }
+      .b-overlay .b-bottom { display:flex; align-items:flex-end; }
       .b-overlay .b-cta {
-        display:inline-block; margin-top:6px; padding:4px 10px; border-radius:4px;
-        background:var(--yellow,#fff200); color:#1a1a1a; font-weight:700; text-decoration:none;
-        pointer-events:auto;
+        display:inline-block; padding:3px 8px; border-radius:3px;
+        background:var(--yellow,#fff200); color:#1a1a1a; font-weight:700; font-size:8px;
+        text-decoration:none; text-transform:uppercase; letter-spacing:.05em; pointer-events:auto;
       }
-      .b-overlay.b-wide .b-cta { margin-top:0; white-space:nowrap; }
 
       .format-meta { padding:10px 12px; display:flex; align-items:center; justify-content:space-between; }
       .format-meta div h3 { margin:0; font-size:13px; color:#eef2f8; }
@@ -301,7 +306,7 @@
       ];
 
       const grid = document.getElementById('bannersGrid');
-      const defaultImage = './assets/generated/iab-bannerset.png';
+      const defaultImage = './assets/generated/edges.png';
 
       function ratioLabel(w, h) {
         const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
@@ -317,37 +322,44 @@
         ctx.drawImage(img, ox, oy, dw, dh);
       }
 
+      let cachedImg = null;
+
       function renderBanners(img) {
+        if (img) cachedImg = img;
+        const src = cachedImg;
         grid.innerHTML = '';
+
+        const heading = document.getElementById('headingInput').value || 'The New Emeya';
+        const sub = document.getElementById('subInput').value || '';
+        const cta = document.getElementById('ctaInput').value || '';
+
         iabSizes.forEach(size => {
           const canvas = document.createElement('canvas');
           canvas.width = size.w; canvas.height = size.h;
           const ctx = canvas.getContext('2d');
           ctx.fillStyle = '#0e1219';
           ctx.fillRect(0, 0, size.w, size.h);
-          if (img) drawCover(ctx, img, size.w, size.h);
+          if (src) drawCover(ctx, src, size.w, size.h);
           const dataUrl = canvas.toDataURL('image/png');
 
-          const aspect = size.w / size.h;
-          const isWide = aspect > 3;
-          const headSize = Math.max(8, Math.min(18, (size.h * 0.18)));
-          const subSize = Math.max(6, headSize * 0.6);
-          const ctaSize = Math.max(6, headSize * 0.5);
-          const ctaPad = Math.max(2, ctaSize * 0.4);
-
-          const heading = document.getElementById('headingInput').value || 'The New Emeya';
-          const sub = document.getElementById('subInput').value || '';
-          const cta = document.getElementById('ctaInput').value || '';
+          const headSize = Math.max(10, Math.min(28, size.h * 0.28));
+          const subSize = Math.max(7, headSize * 0.5);
+          const ctaSize = Math.max(6, Math.min(9, size.h * 0.08));
+          const ctaPad = Math.max(2, ctaSize * 0.35);
 
           const card = document.createElement('article');
           card.className = 'format-card';
           card.innerHTML = `
             <div class="preview-box" style="aspect-ratio:${size.w}/${size.h};">
               <img src="${dataUrl}" alt="${size.name} output" />
-              <div class="b-overlay${isWide ? ' b-wide' : ''}">
-                <div class="b-heading" style="font-size:${headSize}px;${isWide ? 'white-space:nowrap;' : ''}">${heading}</div>
-                ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${isWide ? sub.split('.')[0] : sub}</div>` : ''}
-                ${cta ? `<a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2}px;">${cta}</a>` : ''}
+              <div class="b-overlay">
+                <div class="b-top">
+                  <div class="b-heading" style="font-size:${headSize}px;">${heading}</div>
+                  ${sub ? `<div class="b-sub" style="font-size:${subSize}px;">${sub}</div>` : ''}
+                </div>
+                <div class="b-bottom">
+                  ${cta ? `<a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2.5}px;">${cta}</a>` : ''}
+                </div>
               </div>
               <div class="focus-dot" style="top:40%;left:62%;"></div>
               <div class="seg-overlay">
@@ -376,7 +388,12 @@
         });
       }
 
-      loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners(null));
+      loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
+
+      /* ─── Live text update ─── */
+      ['headingInput', 'subInput', 'ctaInput'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => renderBanners());
+      });
 
       /* ─── Generate button animation ─── */
       const genBtn = document.getElementById('genBtn');
@@ -391,7 +408,7 @@
           cards.forEach(c => c.classList.remove('processing'));
           genBtn.disabled = false;
           genBtn.innerHTML = '<i class="bi bi-grid-3x3-gap" style="margin-right:6px;"></i>Generate Bannerset';
-          loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners(null));
+          loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
         }, 2000);
       });
 
