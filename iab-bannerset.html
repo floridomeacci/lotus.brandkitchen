@@ -425,11 +425,7 @@
       const vgSrc = sessionStorage.getItem('vg-hero-image');
       if (vgSrc) {
         sessionStorage.removeItem('vg-hero-image');
-        heroSlot.classList.add('has-file');
-        heroSlot.innerHTML = '<i class="bi bi-check-circle"></i>Image from Visual Generator';
-        loadImage(vgSrc).then(img => renderBanners(img)).catch(() => {
-          loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
-        });
+        loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
       } else {
         loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners());
       }
@@ -485,6 +481,13 @@
           }
         });
       });
+
+      /* ─── Apply VG handoff image now that heroSlot exists ─── */
+      if (vgSrc) {
+        heroSlot.classList.add('has-file');
+        heroSlot.innerHTML = '<i class="bi bi-check-circle"></i>Image from Visual Generator';
+        loadImage(vgSrc).then(img => renderBanners(img));
+      }
     </script>
 
     <!-- Side panel overlay -->
