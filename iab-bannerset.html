@@ -82,47 +82,30 @@
       }
       .download-all:hover { border-color:rgba(237,229,0,.4); }
 
-      /* Banner cards grid */
-      .banners-grid {
-        display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;
-      }
+      /* ── Masonry banner grid (matches Asset Scaler) ── */
+      .formats-masonry { column-count:3; column-gap:14px; }
 
-      .banner-card {
-        background:var(--panel,#212126); border:1px solid rgba(255,255,255,.08); border-radius:10px;
-        overflow:hidden; transition:border-color .2s;
+      .format-card {
+        border:1px solid rgba(255,255,255,.11); border-radius:12px; background:#121620;
+        overflow:hidden; break-inside:avoid; margin:0 0 14px; width:100%; display:inline-block;
+        transition:border-color .2s;
       }
-      .banner-card:hover { border-color:rgba(255,255,255,.18); }
+      .format-card:hover { border-color:rgba(255,255,255,.22); }
 
-      .banner-canvas {
-        width:100%; display:flex; align-items:center; justify-content:center;
-        background:#1a1a1a; position:relative; overflow:hidden;
+      .preview-box {
+        width:100%; background:#0e1219; display:grid; place-items:center; position:relative; overflow:hidden;
       }
-      /* Scale all previews to fit within the card */
-      .banner-inner {
-        position:relative; background:linear-gradient(135deg, #0a0a0a 0%, #222 50%, #0f0f0f 100%);
-        display:flex; flex-direction:column; justify-content:center; overflow:hidden;
-      }
-      .banner-inner .b-logo { position:absolute; top:8%; left:6%; height:12%; }
-      .banner-inner .b-hero { width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:.6; }
-      .banner-inner .b-text { position:relative; z-index:1; padding:8% 6%; }
-      .banner-inner .b-heading { margin:0; color:#fff; font-weight:800; line-height:1.15; }
-      .banner-inner .b-sub { margin:4px 0 0; color:rgba(255,255,255,.7); font-weight:400; }
-      .banner-inner .b-cta {
-        display:inline-block; margin-top:6px; padding:4px 10px; border-radius:4px;
-        background:var(--yellow,#fff200); color:#1a1a1a; font-weight:700; text-decoration:none;
-      }
+      .preview-box img { width:100%; height:100%; object-fit:cover; display:block; }
 
-      .banner-meta {
-        padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
-      }
-      .banner-meta .bm-label { font-size:11px; font-weight:600; color:#ddd; }
-      .banner-meta .bm-size { font-size:10px; color:rgba(255,255,255,.3); }
-      .banner-meta .bm-dl {
+      .format-meta { padding:10px 12px; display:flex; align-items:center; justify-content:space-between; }
+      .format-meta div h3 { margin:0; font-size:13px; color:#eef2f8; }
+      .format-meta div p { margin:4px 0 0; font-size:11px; color:#8f98aa; }
+      .format-meta .bm-dl {
         width:28px; height:28px; border-radius:6px; border:1px solid rgba(255,255,255,.1);
         background:transparent; display:flex; align-items:center; justify-content:center;
-        cursor:pointer; color:rgba(255,255,255,.4); font-size:13px;
+        cursor:pointer; color:rgba(255,255,255,.4); font-size:13px; flex-shrink:0;
       }
-      .banner-meta .bm-dl:hover { border-color:rgba(237,229,0,.5); color:#fff; }
+      .format-meta .bm-dl:hover { border-color:rgba(237,229,0,.5); color:#fff; }
 
       /* Focus point indicator */
       .focus-dot {
@@ -136,7 +119,7 @@
         position:absolute; inset:0; z-index:4; pointer-events:none; opacity:0;
         transition:opacity .2s;
       }
-      .banner-card:hover .seg-overlay { opacity:1; }
+      .format-card:hover .seg-overlay { opacity:1; }
       .seg-label {
         position:absolute; font-size:7px; font-weight:700; color:rgba(255,255,255,.6);
         background:rgba(0,0,0,.5); padding:1px 4px; border-radius:3px;
@@ -147,7 +130,7 @@
         0% { background-position:-200% 0; }
         100% { background-position:200% 0; }
       }
-      .processing .banner-canvas {
+      .processing .preview-box {
         background:linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
         background-size:200% 100%;
         animation:shimmer 1.5s ease infinite;
@@ -156,9 +139,13 @@
       .active-app { color:#f3f5fb; font-weight:600; }
       .active-app .ico { color:#ede500; }
 
+      @media (max-width:1240px) {
+        .formats-masonry { column-count:2; }
+      }
       @media (max-width:900px) {
         .iab-shell { grid-template-columns:1fr; overflow-y:auto; }
         .left-col, .right-col { overflow:visible; }
+        .formats-masonry { column-count:1; }
       }
     </style>
   </head>
@@ -278,7 +265,7 @@
               <button class="download-all"><i class="bi bi-download" style="margin-right:4px;"></i>Download All</button>
             </div>
 
-            <div class="banners-grid" id="bannersGrid"></div>
+            <div class="formats-masonry" id="bannersGrid"></div>
           </div>
         </section>
       </main>
@@ -298,51 +285,48 @@
       ];
 
       const grid = document.getElementById('bannersGrid');
+      const defaultImage = './assets/generated/brand-guardian.png';
 
-      function scaleToFit(w, h, maxW) {
-        const scale = Math.min(maxW / w, 200 / h, 1);
-        return { sw: Math.round(w * scale), sh: Math.round(h * scale) };
+      function ratioLabel(w, h) {
+        const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+        const d = gcd(w, h);
+        return `${w / d}:${h / d}`;
       }
 
-      function renderBanners() {
+      function drawCover(ctx, img, tw, th) {
+        const sr = img.width / img.height, tr = tw / th;
+        let dw, dh, ox = 0, oy = 0;
+        if (sr > tr) { dh = th; dw = dh * sr; ox = (tw - dw) / 2; }
+        else { dw = tw; dh = dw / sr; oy = (th - dh) / 2; }
+        ctx.drawImage(img, ox, oy, dw, dh);
+      }
+
+      function renderBanners(img) {
         grid.innerHTML = '';
         iabSizes.forEach(size => {
-          const { sw, sh } = scaleToFit(size.w, size.h, 260);
-          const aspect = size.w / size.h;
-          const isWide = aspect > 3;
-          const isTall = aspect < 0.5;
-          const headSize = Math.max(8, Math.min(18, sh * 0.18));
-          const subSize = Math.max(6, headSize * 0.6);
-          const ctaSize = Math.max(6, headSize * 0.5);
-          const ctaPad = Math.max(2, ctaSize * 0.4);
+          const canvas = document.createElement('canvas');
+          canvas.width = size.w; canvas.height = size.h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#0e1219';
+          ctx.fillRect(0, 0, size.w, size.h);
+          if (img) drawCover(ctx, img, size.w, size.h);
+          const dataUrl = canvas.toDataURL('image/png');
 
-          const card = document.createElement('div');
-          card.className = 'banner-card';
+          const card = document.createElement('article');
+          card.className = 'format-card';
           card.innerHTML = `
-            <div class="banner-canvas" style="min-height:${Math.max(sh + 20, 60)}px;">
-              <div class="banner-inner" style="width:${sw}px;height:${sh}px;">
-                <img class="b-hero" src="./assets/generated/brand-guardian.png" alt="" />
-                <div class="b-text" style="padding:${isTall ? '12% 8%' : '6% 6%'};">
-                  ${!isWide ? `<div class="b-heading" style="font-size:${headSize}px;">The New Emeya</div>
-                  <div class="b-sub" style="font-size:${subSize}px;">Hyper-GT Performance. Pure Electric.</div>
-                  <a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2}px;margin-top:${ctaPad}px;">Discover More</a>` :
-                  `<div style="display:flex;align-items:center;gap:8px;">
-                    <div class="b-heading" style="font-size:${headSize}px;white-space:nowrap;">The New Emeya</div>
-                    <div class="b-sub" style="font-size:${subSize}px;white-space:nowrap;">Hyper-GT Performance</div>
-                    <a class="b-cta" style="font-size:${ctaSize}px;padding:${ctaPad}px ${ctaPad*2}px;">Discover More</a>
-                  </div>`}
-                </div>
-                <div class="focus-dot" style="top:${sh*0.4}px;left:${sw*0.62}px;"></div>
-                <div class="seg-overlay">
-                  <span class="seg-label" style="top:4px;left:4px;">BG</span>
-                  <span class="seg-label" style="bottom:4px;right:4px;">Product</span>
-                </div>
+            <div class="preview-box" style="aspect-ratio:${size.w}/${size.h};">
+              <img src="${dataUrl}" alt="${size.name} output" />
+              <div class="focus-dot" style="top:40%;left:62%;"></div>
+              <div class="seg-overlay">
+                <span class="seg-label" style="top:4px;left:4px;">BG</span>
+                <span class="seg-label" style="bottom:4px;right:4px;">Product</span>
               </div>
             </div>
-            <div class="banner-meta">
+            <div class="format-meta">
               <div>
-                <div class="bm-label">${size.name}</div>
-                <div class="bm-size">${size.w} × ${size.h} px</div>
+                <h3>${size.name}</h3>
+                <p>${size.w} × ${size.h} · Ratio ${ratioLabel(size.w, size.h)}</p>
               </div>
               <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
             </div>
@@ -351,7 +335,16 @@
         });
       }
 
-      renderBanners();
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = src;
+        });
+      }
+
+      loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners(null));
 
       /* ─── Generate button animation ─── */
       const genBtn = document.getElementById('genBtn');
@@ -359,13 +352,14 @@
         genBtn.disabled = true;
         genBtn.innerHTML = '<i class="bi bi-hourglass-split" style="margin-right:6px;"></i>Processing images...';
 
-        const cards = document.querySelectorAll('.banner-card');
+        const cards = document.querySelectorAll('.format-card');
         cards.forEach(c => c.classList.add('processing'));
 
         setTimeout(() => {
           cards.forEach(c => c.classList.remove('processing'));
           genBtn.disabled = false;
           genBtn.innerHTML = '<i class="bi bi-grid-3x3-gap" style="margin-right:6px;"></i>Generate Bannerset';
+          loadImage(defaultImage).then(img => renderBanners(img)).catch(() => renderBanners(null));
         }, 2000);
       });
 
