@@ -323,6 +323,10 @@ body {
   background-image: url("./assets/thumbnails/creative-copywriter-thumb.png");
 }
 
+.shot-8 {
+  background-image: url("./assets/thumbnails/data-dashboard-thumb.png");
+}
+
 .card-body {
   padding: 12px 14px;
   min-height: 0;
